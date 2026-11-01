@@ -1,6 +1,6 @@
 /// <summary>
 /// Anything the player can use with the E key: the generator, doors, switches.
-/// Eliza's PlayerInteractor looks for this. Linn's Generator and Door implement it.
+/// Eliza's PlayerInteractor (C10) looks for this. Linn's Generator and Door (D5, D6) implement it.
 ///
 /// Example:
 ///     public class Generator : MonoBehaviour, IInteractable

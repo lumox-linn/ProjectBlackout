@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-/// <summary>The states the whole game can be in. Eliza's GameManager switches between them.</summary>
+/// <summary>The states the whole game can be in. Eliza's GameManager (C1) switches between them.</summary>
 public enum GameState
 {
     Menu,
