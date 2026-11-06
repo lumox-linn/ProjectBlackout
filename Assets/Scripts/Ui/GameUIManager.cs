@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameUIManager : MonoBehaviour
 {
@@ -28,9 +29,33 @@ public class GameUIManager : MonoBehaviour
         ShowGameState(GameState.Menu);
     }
 
+    private void Update()
+    {
+        if (Keyboard.current == null)
+            return;
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (settingsPanel.activeSelf)
+            {
+                CloseSettings();
+            }
+            else if (currentState == GameState.Playing)
+            {
+                PauseGame();
+            }
+            else if (currentState == GameState.Paused)
+            {
+                ResumeGame();
+            }
+        }
+    }
+
     private void ShowGameState(GameState state)
     {
         currentState = state;
+
+        Time.timeScale = state == GameState.Paused ? 0f : 1f;
 
         mainMenuPanel.SetActive(state == GameState.Menu);
         hudPanel.SetActive(state == GameState.Playing ||
@@ -47,9 +72,31 @@ public class GameUIManager : MonoBehaviour
         GameEvents.RaiseGameStateChanged(GameState.Playing);
     }
 
+    public void PauseGame()
+    {
+        if (currentState == GameState.Playing)
+        {
+            GameEvents.RaiseGameStateChanged(GameState.Paused);
+        }
+    }
+
+    public void ResumeGame()
+    {
+        if (currentState == GameState.Paused)
+        {
+            GameEvents.RaiseGameStateChanged(GameState.Playing);
+        }
+    }
+
+    public void ReturnToMainMenu()
+    {
+        GameEvents.RaiseGameStateChanged(GameState.Menu);
+    }
+
     public void OpenSettings()
     {
         mainMenuPanel.SetActive(false);
+        pausePanel.SetActive(false);
         settingsPanel.SetActive(true);
     }
 
@@ -62,7 +109,6 @@ public class GameUIManager : MonoBehaviour
     public void QuitGame()
     {
         Debug.Log("Quit button clicked!");
-
         Application.Quit();
     }
 }
