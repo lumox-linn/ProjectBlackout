@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Testing helper: draws every noise as a yellow wire sphere in the Scene view (and the Game view
@@ -15,7 +16,7 @@ public class NoiseDebugger : MonoBehaviour
 
     [Header("Fake noise for testing (optional)")]
     [Tooltip("Press this key in Play mode to make a noise at the Fake Noise Point.")]
-    [SerializeField] private KeyCode fakeNoiseKey = KeyCode.N;
+    [SerializeField] private Key fakeNoiseKey = Key.N;
     [SerializeField] private Transform fakeNoisePoint;
     [SerializeField] private float fakeNoiseRadius = 15f;
 
@@ -39,12 +40,9 @@ public class NoiseDebugger : MonoBehaviour
 
     private void Update()
     {
-        // Uses the old Input class. If your project's Active Input Handling is set to
-        // "Input System Package (New)" only, this key won't work. Set it to "Both", or ignore the key.
-#if ENABLE_LEGACY_INPUT_MANAGER
-        if (fakeNoisePoint != null && Input.GetKeyDown(fakeNoiseKey))
+        // Uses the new Input System (the project's Active Input Handling is "Input System Package").
+        if (fakeNoisePoint != null && Keyboard.current != null && Keyboard.current[fakeNoiseKey].wasPressedThisFrame)
             NoiseSystem.Emit(fakeNoisePoint.position, fakeNoiseRadius, gameObject);
-#endif
         recent.RemoveAll(r => Time.time - r.time > showSeconds);
     }
 
