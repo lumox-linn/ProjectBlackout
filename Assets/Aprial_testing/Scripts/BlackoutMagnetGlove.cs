@@ -42,9 +42,7 @@ namespace ProjectBlackout.PlayerTest
         public BlackoutMagneticObject HeldObject => held;
         public float HoldDistance => holdDistance;
 
-        public void SetReferences(
-            Camera camera,
-            Transform targetHoldPoint)
+        public void SetReferences(Camera camera, Transform targetHoldPoint)
         {
             playerCamera = camera;
             holdPoint = targetHoldPoint;
@@ -78,14 +76,14 @@ namespace ProjectBlackout.PlayerTest
 
             if (held != null)
             {
-                // Drop when right-click is released
+                // Drop when right-click is released.
                 if (!RightHeld())
                 {
                     Release(false);
                     return;
                 }
 
-                // Mouse wheel adjusts object distance
+                // Mouse wheel adjusts object distance.
                 float wheel = ReadWheel();
 
                 if (Mathf.Abs(wheel) > 0.0001f)
@@ -102,7 +100,7 @@ namespace ProjectBlackout.PlayerTest
                     UpdateHoldPoint();
                 }
 
-                // Throw while holding
+                // Throw while holding.
                 if (LeftClick())
                 {
                     Release(true);
@@ -136,22 +134,18 @@ namespace ProjectBlackout.PlayerTest
                 return;
             }
 
-            Vector3 gap =
-                holdPoint.position - heldBody.position;
+            Vector3 gap = holdPoint.position - heldBody.position;
 
-            // Drop if the object becomes too distant
             if (gap.magnitude > maxHoldSeparation)
             {
                 Release(false);
                 return;
             }
 
-            // Physics-based magnetic attraction
-            Vector3 desiredVelocity =
-                Vector3.ClampMagnitude(
-                    gap * pullGain,
-                    maxPullSpeed
-                );
+            Vector3 desiredVelocity = Vector3.ClampMagnitude(
+                gap * pullGain,
+                maxPullSpeed
+            );
 
             Vector3 acceleration =
                 (desiredVelocity - heldBody.linearVelocity)
@@ -170,18 +164,17 @@ namespace ProjectBlackout.PlayerTest
             );
 
             if (!Physics.Raycast(
-                    ray,
-                    out RaycastHit hit,
-                    pickupRange,
-                    ~0,
-                    QueryTriggerInteraction.Ignore))
+                ray,
+                out RaycastHit hit,
+                pickupRange,
+                ~0,
+                QueryTriggerInteraction.Ignore))
             {
                 return;
             }
 
             BlackoutMagneticObject target =
-                hit.collider.GetComponentInParent<
-                    BlackoutMagneticObject>();
+                hit.collider.GetComponentInParent<BlackoutMagneticObject>();
 
             if (target == null ||
                 !target.canBePickedUp ||
@@ -202,12 +195,10 @@ namespace ProjectBlackout.PlayerTest
             heldBody = body;
             held.IsHeld = true;
 
-            // Save original physics settings
             previousGravity = heldBody.useGravity;
             previousLinearDamping = heldBody.linearDamping;
             previousAngularDamping = heldBody.angularDamping;
 
-            // Make the object easier to hold
             heldBody.useGravity = false;
             heldBody.linearDamping = 4f;
             heldBody.angularDamping = 6f;
@@ -217,13 +208,19 @@ namespace ProjectBlackout.PlayerTest
         {
             if (heldBody != null)
             {
-                // Restore original physics
                 heldBody.useGravity = previousGravity;
                 heldBody.linearDamping = previousLinearDamping;
                 heldBody.angularDamping = previousAngularDamping;
 
                 if (throwObject && playerCamera != null)
                 {
+                    // A4: Arm a recently thrown crate to stun IStunnable targets.
+                    BlackoutImpactNoise impact =
+                        heldBody.GetComponent<BlackoutImpactNoise>();
+
+                    if (impact != null)
+                        impact.MarkThrown();
+
                     heldBody.AddForce(
                         playerCamera.transform.forward * throwImpulse,
                         ForceMode.Impulse
