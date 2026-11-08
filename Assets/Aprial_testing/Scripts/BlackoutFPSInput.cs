@@ -28,7 +28,8 @@ namespace ProjectBlackout.PlayerTest
 
         private void Update()
         {
-            if (Cursor.lockState != CursorLockMode.Locked)
+            if (!BlackoutGameMenu.IsGameplayActive ||
+                Cursor.lockState != CursorLockMode.Locked)
                 return;
 
             Vector2 input = ReadMovement();

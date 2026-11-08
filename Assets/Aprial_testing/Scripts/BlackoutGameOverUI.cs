@@ -1,96 +1,77 @@
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ProjectBlackout.PlayerTest
 {
+    /// <summary>
+    /// Owns ONLY the Aprial health -> team Lost-state connection.
+    /// The team's existing UI/Aprial bridge shows LosePanel.
+    /// Never deactivates Canvas or independently locks the cursor.
+    /// </summary>
     public class BlackoutGameOverUI : MonoBehaviour
     {
-        [Header("References")]
+        [Header("Aprial Health")]
         [SerializeField] private BlackoutPlayerHealth playerHealth;
+
+        // Kept for compatibility with already-serialized Inspector fields.
+        [Header("Legacy fields - not used by shared main scene")]
         [SerializeField] private GameObject gameOverPanel;
-
-        [Header("Hide When Player Dies")]
         [SerializeField] private GameObject[] panelsToHide;
-
-        [Header("Disable When Player Dies")]
         [SerializeField] private MonoBehaviour[] scriptsToDisable;
 
-        private bool isGameOver = false;
+        private bool gameOverTriggered;
 
         private void Awake()
         {
             if (playerHealth == null)
                 playerHealth = GetComponent<BlackoutPlayerHealth>();
-
-            if (gameOverPanel != null)
-                gameOverPanel.SetActive(false);
         }
 
         private void OnEnable()
         {
             if (playerHealth != null)
-                playerHealth.Died += ShowGameOver;
+                playerHealth.Died += OnPlayerDied;
         }
 
         private void OnDisable()
         {
             if (playerHealth != null)
-                playerHealth.Died -= ShowGameOver;
+                playerHealth.Died -= OnPlayerDied;
         }
 
-        private void ShowGameOver()
+        private void OnPlayerDied()
         {
-            if (isGameOver)
+            if (gameOverTriggered)
                 return;
 
-            isGameOver = true;
+            gameOverTriggered = true;
 
-            // Disable player controls and pause menu.
-            foreach (MonoBehaviour script in scriptsToDisable)
+            if (GameManager.Instance != null)
             {
-                if (script != null && script != this)
-                    script.enabled = false;
+                GameManager.Instance.LoseGame();
             }
-
-            // Hide other UI panels.
-            foreach (GameObject panel in panelsToHide)
+            else
             {
-                if (panel != null)
-                    panel.SetActive(false);
+                // Standalone PlayerTest fallback; no team game manager exists.
+                Time.timeScale = 0f;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                if (gameOverPanel != null)
+                    gameOverPanel.SetActive(true);
             }
-
-            // Display existing Game Over UI.
-            if (gameOverPanel != null)
-                gameOverPanel.SetActive(true);
-
-            // Stop game physics and gameplay time.
-            Time.timeScale = 0f;
-
-            // Show the mouse so UI buttons are clickable.
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-
-            Debug.Log("GAME OVER - Player lost all hearts!");
         }
 
-        private void LateUpdate()
-        {
-            if (!isGameOver)
-                return;
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-
-        // Connect this to your Restart button.
+        // Older Restart buttons can still call this method.
         public void RestartGame()
         {
-            Time.timeScale = 1f;
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.RestartGame();
+                return;
+            }
 
-            SceneManager.LoadScene(
-                SceneManager.GetActiveScene().name
-            );
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
