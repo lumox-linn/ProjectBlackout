@@ -45,7 +45,7 @@ namespace ProjectBlackout.PlayerTest
 
         private void Update()
         {
-            if (!BlackoutGameMenu.IsGameplayActive)
+            if (GameEvents.CurrentState != GameState.Playing)
                 return;
 
             if (Cursor.lockState != CursorLockMode.Locked)

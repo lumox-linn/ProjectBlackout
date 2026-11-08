@@ -38,7 +38,7 @@ namespace ProjectBlackout.PlayerTest
         {
             canInteract = false;
 
-            if (!BlackoutGameMenu.IsGameplayActive)
+            if (GameEvents.CurrentState != GameState.Playing)
                 return;
 
             if (glove == null || playerCamera == null)

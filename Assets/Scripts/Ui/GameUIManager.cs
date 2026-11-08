@@ -93,6 +93,10 @@ public class GameUIManager : MonoBehaviour
         losePanel.SetActive(state == GameState.Lost);
 
         settingsPanel.SetActive(false);
+
+        bool playing = state == GameState.Playing;
+        Cursor.lockState = playing ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !playing;
     }
 
     public void PlayGame()

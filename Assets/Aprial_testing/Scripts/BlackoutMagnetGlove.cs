@@ -128,7 +128,7 @@ namespace ProjectBlackout.PlayerTest
         private void Update()
         {
             if (!hasGlove ||
-                !BlackoutGameMenu.IsGameplayActive ||
+                GameEvents.CurrentState != GameState.Playing ||
                 Cursor.lockState != CursorLockMode.Locked ||
                 playerCamera == null ||
                 holdPoint == null)
@@ -350,7 +350,7 @@ namespace ProjectBlackout.PlayerTest
         private void OnGUI()
         {
             if (!enabled ||
-                !BlackoutGameMenu.IsGameplayActive)
+                GameEvents.CurrentState != GameState.Playing)
                 return;
 
             // Charge bar only appears while charging.
