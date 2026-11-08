@@ -104,7 +104,6 @@ GameObject:
   - component: {fileID: 5929925998325867169}
   - component: {fileID: 1992002201009128417}
   - component: {fileID: 1626807806187026765}
-  - component: {fileID: 3355471027637511207}
   - component: {fileID: 5285621913965069331}
   - component: {fileID: 6835708288027798148}
   m_Layer: 0
@@ -259,21 +258,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3355471027637511207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8638103117708522086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b6dbe1a215adde4486bd49fd1d1d903, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NavTestMover
-  target: {fileID: 0}
-  repathInterval: 0.25
-  repathDistance: 0.5
 --- !u!114 &5285621913965069331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,7 +270,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c72c4512f2d13418b96b808adbae62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreatureController
+  patrolPoints: []
+  patrolPointsParentName: PatrolPoints
+  patrolSpeed: 2
+  patrolWaitTime: 1.5
+  stuckTimeout: 3
   logStateChanges: 1
+  logPatrolPoints: 1
   debugKeys: 1
 --- !u!114 &6835708288027798148
 MonoBehaviour:
