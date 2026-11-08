@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -38,7 +39,24 @@ namespace ProjectBlackout.PlayerTest
         private bool syncedState;
         private bool initialized;
 
+        // RuntimeInitializeOnLoadMethod(AfterSceneLoad) runs for the first scene only.
+        // A restart reloads the scene, so reinstall our runtime-only UI bridge each time.
+        // Registering in SubsystemRegistration also works when Unity's domain reload
+        // is disabled under Enter Play Mode Options.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void RegisterSceneReloadHook()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            InstallInAprialScene();
+        }
+
         // Attach automatically, so no scene/prefab from another member needs editing.
+        // Also runs on the initial scene; duplicate installs are prevented below.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void InstallInAprialScene()
         {
@@ -50,6 +68,8 @@ namespace ProjectBlackout.PlayerTest
 
             GameObject bridge = new GameObject("Aprial_UIBridge_Runtime");
             bridge.AddComponent<BlackoutUIBridge>();
+            Debug.Log("[Aprial] UI bridge installed in scene: " +
+                      SceneManager.GetActiveScene().name);
         }
 
         private void Awake()
