@@ -1,15 +1,18 @@
 using UnityEngine;
 
 // ---------------------------------------------------------------------------
-// StateMachine  (Task B2)
+// StateMachine  (Task B2, minimum time in state added in B8)
 //
 // A small, reusable finite state machine (FSM).
 // - Holds exactly ONE current state.
 // - Tick() runs the current state's Tick() every frame.
 // - ChangeState() switches safely: old.Exit() -> new.Enter().
-// - Tracks how long we've been in the current state (TimeInState). B8 uses this
-//   for a "minimum time in state" rule that stops the creature flickering
-//   between states.
+// - Tracks how long we've been in the current state (TimeInState).
+// - B8: MinTimeInState + CanLeaveState. Normal (sense-based) transitions
+//   only happen once the creature has been in its state for at least
+//   MinTimeInState seconds, so it can't flicker between two states when a
+//   sense result changes back and forth. Forced changes (a stun, debug keys,
+//   timers that have finished) still use ChangeState() directly.
 //
 // It's a plain C# class, NOT a MonoBehaviour: it doesn't need to be on a
 // GameObject. CreatureController creates it with "new" and calls Tick() from
@@ -34,14 +37,21 @@ public class StateMachine
     // When true, every state change is written to the Console.
     public bool LogChanges { get; set; }
 
+    // Minimum seconds in a state before a normal transition is allowed (B8).
+    public float MinTimeInState { get; set; }
+
+    // True once the current state has lasted at least MinTimeInState.
+    public bool CanLeaveState => TimeInState >= MinTimeInState;
+
     // Other scripts can listen for state changes (old state, new state).
     // Example use later: play a growl sound when entering Chase.
     public event System.Action<IState, IState> StateChanged;
 
-    public StateMachine(Object owner, bool logChanges = true)
+    public StateMachine(Object owner, bool logChanges = true, float minTimeInState = 0f)
     {
         this.owner = owner;
         LogChanges = logChanges;
+        MinTimeInState = minTimeInState;
     }
 
     public void ChangeState(IState newState)

@@ -3,9 +3,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.Serialization;
 
 // ---------------------------------------------------------------------------
-// CreatureController  (B2, updated in B3, B4, B5 and B6)
+// CreatureController  (B2, updated in B3-B8)
 //
 // The MonoBehaviour on the Creature. It is the "brain host":
 // - owns the NavMeshAgent
@@ -18,11 +19,14 @@ using UnityEngine.InputSystem.Controls;
 // B4 added: the link to CreatureSenses, and the chase settings.
 // B5 added: the investigate settings (speed, look-around time and angle).
 // B6 added: the attack settings, FlatDistanceToPlayer(), attack range gizmo.
-// Later tasks add: IStunnable (B7).
+// B7 added: implements IStunnable (Core) so thrown crates can stun it,
+//           with immunity after a stun. Debug key 5 now calls Stun().
+// B8 added: Min Time In State (anti-flicker), and renamed the patrol log
+//           option to "Log State Details" (it covers Patrol and Investigate).
 // ---------------------------------------------------------------------------
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CreatureSenses))]
-public class CreatureController : MonoBehaviour
+public class CreatureController : MonoBehaviour, IStunnable
 {
     [Header("Patrol (B3)")]
     [Tooltip("The patrol route, in order. Drag PatrolPoint_1..10 here, or right-click this " +
@@ -85,15 +89,29 @@ public class CreatureController : MonoBehaviour
     [Tooltip("How fast the creature turns to face the player while attacking (degrees per second).")]
     [SerializeField] private float attackTurnSpeed = 360f;
 
+    [Header("Stunned (B7)")]
+    [Tooltip("After a stun ends, the creature can't be stunned again for this long (seconds).")]
+    [SerializeField] private float stunImmunityTime = 3f;
+
+    [Tooltip("Stun length used by debug key 5 and 'Debug: Stun' (a real crate passes its own time).")]
+    [SerializeField] private float debugStunSeconds = 3f;
+
+    [Header("Transitions (B8)")]
+    [Tooltip("Minimum time in a state before a normal (sense-based) transition is allowed (seconds). " +
+             "Stops the creature flickering between states. Stuns always happen immediately.")]
+    [SerializeField] private float minTimeInState = 0.5f;
+
     [Header("Debug")]
     [Tooltip("Write every state change to the Console.")]
     [SerializeField] private bool logStateChanges = true;
 
-    [Tooltip("Write a Console line each time a patrol point is reached.")]
-    [SerializeField] private bool logPatrolPoints = true;
+    [Tooltip("Write extra Console lines for Patrol and Investigate " +
+             "(patrol point reached, going to check, looking around...).")]
+    [FormerlySerializedAs("logPatrolPoints")]
+    [SerializeField] private bool logStateDetails = true;
 
-    [Tooltip("In Play mode, click the Game view, then press 1-5 (number row or number pad) to force a state: " +
-             "1 Patrol, 2 Investigate, 3 Chase, 4 Attack, 5 Stunned. For testing only.")]
+    [Tooltip("In Play mode, click the Game view, then press 1-5 (number row or number pad): " +
+             "1 Patrol, 2 Investigate, 3 Chase, 4 Attack, 5 Stun (like a crate hit). For testing only.")]
     [SerializeField] private bool debugKeys = true;
 
     // --- Things the states can use (read-only from outside) ---
@@ -105,7 +123,7 @@ public class CreatureController : MonoBehaviour
     public float PatrolSpeed => patrolSpeed;
     public float PatrolWaitTime => patrolWaitTime;
     public float StuckTimeout => stuckTimeout;
-    public bool LogPatrolPoints => logPatrolPoints;
+    public bool LogStateDetails => logStateDetails;
 
     public float ChaseSpeed => chaseSpeed;
     public float ChaseRepathInterval => chaseRepathInterval;
@@ -121,6 +139,11 @@ public class CreatureController : MonoBehaviour
     public float AttackCooldown => attackCooldown;
     public int AttackDamage => attackDamage;
     public float AttackTurnSpeed => attackTurnSpeed;
+
+    // True while the creature can't be stunned (shortly after a stun).
+    public bool IsStunImmune => Time.time < stunImmuneUntil;
+
+    private float stunImmuneUntil;
 
     // Horizontal distance to the player (height ignored). Infinity if there's no player.
     public float FlatDistanceToPlayer()
@@ -181,7 +204,7 @@ public class CreatureController : MonoBehaviour
                              $"smaller than Attack Range ({attackRange}), or the creature can't reach attack range.", this);
         }
 
-        Fsm = new StateMachine(this, logStateChanges);
+        Fsm = new StateMachine(this, logStateChanges, minTimeInState);
 
         Patrol = new PatrolState(this);
         Investigate = new InvestigateState(this);
@@ -198,8 +221,9 @@ public class CreatureController : MonoBehaviour
 
     private void Update()
     {
-        // Lets you tick/untick "Log State Changes" during Play mode.
+        // Lets you change these in the Inspector during Play mode.
         Fsm.LogChanges = logStateChanges;
+        Fsm.MinTimeInState = minTimeInState;
 
         if (debugKeys)
         {
@@ -207,6 +231,43 @@ public class CreatureController : MonoBehaviour
         }
 
         Fsm.Tick();
+    }
+
+    // ---------------------------------------------------------------------------
+    // IStunnable (Core). A thrown crate calls this on the creature:
+    //     collision.collider.GetComponentInParent<IStunnable>()?.Stun(3f);
+    // Transition: Any state -> Stunned, unless already stunned or immune.
+    // ---------------------------------------------------------------------------
+    public void Stun(float seconds)
+    {
+        if (Fsm == null || seconds <= 0f)
+        {
+            return;
+        }
+
+        if (Fsm.CurrentState == Stunned)
+        {
+            Debug.Log("[Creature] Hit while already stunned. Ignored.", this);
+            return;
+        }
+
+        if (IsStunImmune)
+        {
+            float left = stunImmuneUntil - Time.time;
+            Debug.Log($"[Creature] Hit, but immune to stuns for another {left:F1} s. Ignored.", this);
+            return;
+        }
+
+        Debug.Log($"[Creature] Stunned for {seconds:F1} s!", this);
+        Stunned.SetDuration(seconds);
+        Fsm.ChangeState(Stunned);
+    }
+
+    // Called by StunnedState when the stun wears off.
+    public void StartStunImmunity()
+    {
+        stunImmuneUntil = Time.time + stunImmunityTime;
+        Debug.Log($"[Creature] Stun over. Immune to stuns for {stunImmunityTime:F1} s.", this);
     }
 
     // Finds the object called patrolPointsParentName (e.g. "PatrolPoints") and adds
@@ -256,7 +317,7 @@ public class CreatureController : MonoBehaviour
         if (Pressed(keyboard.digit2Key, keyboard.numpad2Key)) Fsm.ChangeState(Investigate);
         if (Pressed(keyboard.digit3Key, keyboard.numpad3Key)) Fsm.ChangeState(Chase);
         if (Pressed(keyboard.digit4Key, keyboard.numpad4Key)) Fsm.ChangeState(Attack);
-        if (Pressed(keyboard.digit5Key, keyboard.numpad5Key)) Fsm.ChangeState(Stunned);
+        if (Pressed(keyboard.digit5Key, keyboard.numpad5Key)) Stun(debugStunSeconds); // goes through the immunity check
     }
 
     private static bool Pressed(KeyControl rowKey, KeyControl numpadKey)
@@ -270,7 +331,7 @@ public class CreatureController : MonoBehaviour
     [ContextMenu("Debug: Force Investigate")] private void ForceInvestigate() { ForceState(Investigate); }
     [ContextMenu("Debug: Force Chase")]       private void ForceChase()       { ForceState(Chase); }
     [ContextMenu("Debug: Force Attack")]      private void ForceAttack()      { ForceState(Attack); }
-    [ContextMenu("Debug: Force Stunned")]     private void ForceStunned()     { ForceState(Stunned); }
+    [ContextMenu("Debug: Stun (like a crate hit)")] private void DebugStun() { if (Application.isPlaying) Stun(debugStunSeconds); }
 
     private void ForceState(IState state)
     {

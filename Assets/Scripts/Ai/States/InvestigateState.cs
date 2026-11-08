@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // ---------------------------------------------------------------------------
-// InvestigateState  (B5)
+// InvestigateState  (B5, min time in state added in B8)
 //
 // Goes to check a spot, looks around, and gives up if it finds nothing.
 // The spot is set with SetTarget() BEFORE switching to this state:
@@ -19,6 +19,7 @@ using UnityEngine.AI;
 //   Investigate -> Chase        sees the player
 //   Investigate -> Investigate  hears a newer noise (new target, starts again)
 //   Investigate -> Patrol       finished looking around without seeing the player
+// Investigate -> Chase waits for the minimum time in state (B8).
 // ---------------------------------------------------------------------------
 public class InvestigateState : CreatureState
 {
@@ -46,7 +47,7 @@ public class InvestigateState : CreatureState
         target = position;
         hasTarget = true;
 
-        if (creature.LogPatrolPoints)
+        if (creature.LogStateDetails)
         {
             Debug.Log($"[Investigate] Going to check the {reason}.", creature);
         }
@@ -77,7 +78,7 @@ public class InvestigateState : CreatureState
     public override void Tick()
     {
         // Transition: Investigate -> Chase.
-        if (creature.Senses.CanSeePlayer)
+        if (creature.Fsm.CanLeaveState && creature.Senses.CanSeePlayer)
         {
             creature.Fsm.ChangeState(creature.Chase);
             return;
@@ -181,7 +182,7 @@ public class InvestigateState : CreatureState
         lookTimer = 0f;
         lookStartRotation = creature.transform.rotation;
 
-        if (creature.LogPatrolPoints)
+        if (creature.LogStateDetails)
         {
             Debug.Log("[Investigate] Looking around...", creature);
         }
@@ -194,7 +195,7 @@ public class InvestigateState : CreatureState
 
         if (progress >= 1f)
         {
-            if (creature.LogPatrolPoints)
+            if (creature.LogStateDetails)
             {
                 Debug.Log("[Investigate] Found nothing. Back to patrol.", creature);
             }
