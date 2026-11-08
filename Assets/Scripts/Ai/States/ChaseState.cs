@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // ---------------------------------------------------------------------------
-// ChaseState  (B4, updated in B5)
+// ChaseState  (B4, updated in B5 and B6)
 //
 // Runs after the player at chase speed.
 // - While the creature can SEE the player: re-target the player's position
@@ -14,7 +14,7 @@ using UnityEngine.AI;
 //
 // Transitions:
 //   Chase -> Investigate   lost sight for LoseSightTime seconds
-//   Chase -> Attack        player within attack range   (added in B6)
+//   Chase -> Attack        can see the player AND they're within attack range (B6)
 // Noises are ignored while chasing: seeing the player is more important.
 // ---------------------------------------------------------------------------
 public class ChaseState : CreatureState
@@ -45,7 +45,12 @@ public class ChaseState : CreatureState
             return;
         }
 
-        // B6 will add here: player within attack range -> Attack.
+        // Transition: Chase -> Attack when the player is visible and close enough.
+        if (senses.CanSeePlayer && creature.FlatDistanceToPlayer() <= creature.AttackRange)
+        {
+            creature.Fsm.ChangeState(creature.Attack);
+            return;
+        }
 
         repathTimer -= Time.deltaTime;
         if (repathTimer > 0f)

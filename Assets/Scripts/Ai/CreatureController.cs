@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 // ---------------------------------------------------------------------------
-// CreatureController  (B2, updated in B3, B4 and B5)
+// CreatureController  (B2, updated in B3, B4, B5 and B6)
 //
 // The MonoBehaviour on the Creature. It is the "brain host":
 // - owns the NavMeshAgent
@@ -17,7 +17,8 @@ using UnityEngine.InputSystem.Controls;
 // auto-finding the patrol points, and a gizmo that draws the patrol route.
 // B4 added: the link to CreatureSenses, and the chase settings.
 // B5 added: the investigate settings (speed, look-around time and angle).
-// Later tasks add: attack settings (B6), IStunnable (B7).
+// B6 added: the attack settings, FlatDistanceToPlayer(), attack range gizmo.
+// Later tasks add: IStunnable (B7).
 // ---------------------------------------------------------------------------
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CreatureSenses))]
@@ -63,6 +64,27 @@ public class CreatureController : MonoBehaviour
     [Tooltip("How far it turns to each side while looking around (degrees).")]
     [SerializeField] private float lookAroundAngle = 90f;
 
+    [Header("Attack (B6)")]
+    [Tooltip("The creature attacks when the player is this close (metres). " +
+             "Must be bigger than the NavMeshAgent's Stopping Distance.")]
+    [SerializeField] private float attackRange = 1.8f;
+
+    [Tooltip("Extra distance before it gives up attacking and chases again (metres). " +
+             "Stops it flickering between Attack and Chase at the edge of the range.")]
+    [SerializeField] private float attackRangeBuffer = 0.4f;
+
+    [Tooltip("Delay before the FIRST hit after reaching the player (seconds). Gives the player a moment to react.")]
+    [SerializeField] private float attackWindup = 0.4f;
+
+    [Tooltip("Time between hits (seconds).")]
+    [SerializeField] private float attackCooldown = 1.2f;
+
+    [Tooltip("Damage per hit. The player dies after 3 hits.")]
+    [SerializeField] private int attackDamage = 1;
+
+    [Tooltip("How fast the creature turns to face the player while attacking (degrees per second).")]
+    [SerializeField] private float attackTurnSpeed = 360f;
+
     [Header("Debug")]
     [Tooltip("Write every state change to the Console.")]
     [SerializeField] private bool logStateChanges = true;
@@ -92,6 +114,26 @@ public class CreatureController : MonoBehaviour
     public float InvestigateSpeed => investigateSpeed;
     public float LookAroundTime => lookAroundTime;
     public float LookAroundAngle => lookAroundAngle;
+
+    public float AttackRange => attackRange;
+    public float AttackRangeBuffer => attackRangeBuffer;
+    public float AttackWindup => attackWindup;
+    public float AttackCooldown => attackCooldown;
+    public int AttackDamage => attackDamage;
+    public float AttackTurnSpeed => attackTurnSpeed;
+
+    // Horizontal distance to the player (height ignored). Infinity if there's no player.
+    public float FlatDistanceToPlayer()
+    {
+        if (Senses == null || Senses.Player == null)
+        {
+            return Mathf.Infinity;
+        }
+
+        Vector3 offset = Senses.Player.position - transform.position;
+        offset.y = 0f;
+        return offset.magnitude;
+    }
 
     // The 5 states. Created once and reused (no new objects every switch).
     public PatrolState Patrol { get; private set; }
@@ -130,6 +172,13 @@ public class CreatureController : MonoBehaviour
         if (patrolPoints.Count == 0)
         {
             FindPatrolPointsInScene();
+        }
+
+        // The agent must stop BEFORE it's out of attack range, or it can never attack.
+        if (Agent.stoppingDistance >= attackRange)
+        {
+            Debug.LogWarning($"[Creature] NavMeshAgent Stopping Distance ({Agent.stoppingDistance}) should be " +
+                             $"smaller than Attack Range ({attackRange}), or the creature can't reach attack range.", this);
         }
 
         Fsm = new StateMachine(this, logStateChanges);
@@ -233,9 +282,14 @@ public class CreatureController : MonoBehaviour
         Fsm.ChangeState(state);
     }
 
-    // Scene view: draws the patrol route (green) when the Creature is selected.
+    // Scene view, when the Creature is selected:
+    // - the patrol route (green)
+    // - the attack range (red circle)
     private void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.red;
+        DrawFlatCircle(transform.position, attackRange);
+
         if (patrolPoints == null || patrolPoints.Count == 0)
         {
             return;
@@ -253,6 +307,19 @@ public class CreatureController : MonoBehaviour
 
             Gizmos.DrawWireSphere(current.position, 0.4f);
             Gizmos.DrawLine(current.position, next.position);
+        }
+    }
+
+    private static void DrawFlatCircle(Vector3 centre, float radius)
+    {
+        const int segments = 32;
+        Vector3 previous = centre + new Vector3(radius, 0f, 0f);
+        for (int i = 1; i <= segments; i++)
+        {
+            float angle = i * Mathf.PI * 2f / segments;
+            Vector3 point = centre + new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
+            Gizmos.DrawLine(previous, point);
+            previous = point;
         }
     }
 }
