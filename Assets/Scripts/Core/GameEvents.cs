@@ -38,7 +38,14 @@ public static class GameEvents
     /// </summary>
     public static event Action<string> InteractPromptChanged;
 
-    public static void RaiseGameStateChanged(GameState state)  => GameStateChanged?.Invoke(state);
+    /// <summary>The current game state. Anyone can check it, e.g. GameEvents.CurrentState == GameState.Playing</summary>
+    public static GameState CurrentState { get; private set; } = GameState.Menu;
+
+    public static void RaiseGameStateChanged(GameState state)
+    {
+        CurrentState = state;
+        GameStateChanged?.Invoke(state);
+    }
     public static void RaiseHealthChanged(int current, int max) => HealthChanged?.Invoke(current, max);
     public static void RaiseObjectiveChanged(string text)       => ObjectiveChanged?.Invoke(text);
     public static void RaiseInteractPromptChanged(string text)  => InteractPromptChanged?.Invoke(text);
