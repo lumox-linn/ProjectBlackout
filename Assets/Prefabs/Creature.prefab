@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 1626807806187026765}
   - component: {fileID: 5285621913965069331}
   - component: {fileID: 6835708288027798148}
+  - component: {fileID: 3289659003466314622}
   m_Layer: 0
   m_Name: Creature
   m_TagString: Untagged
@@ -275,6 +276,9 @@ MonoBehaviour:
   patrolSpeed: 2
   patrolWaitTime: 1.5
   stuckTimeout: 3
+  chaseSpeed: 4.5
+  chaseRepathInterval: 0.2
+  loseSightTime: 1.5
   logStateChanges: 1
   logPatrolPoints: 1
   debugKeys: 1
@@ -293,3 +297,24 @@ MonoBehaviour:
   showInGame: 1
   heightOffset: 1.5
   fontSize: 20
+--- !u!114 &3289659003466314622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638103117708522086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96bdb386edd08fb47b75ee8b3fd52011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreatureSenses
+  eyes: {fileID: 0}
+  viewDistance: 12
+  viewAngle: 110
+  sightCheckInterval: 0.2
+  sightBlockers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  playerTag: Player
+  logSightChanges: 1

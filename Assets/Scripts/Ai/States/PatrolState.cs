@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // ---------------------------------------------------------------------------
-// PatrolState  (B3)
+// PatrolState  (B3, sight check added in B4)
 //
 // Walks between the patrol points in a loop (1 -> 2 -> ... -> 10 -> 1 ...),
 // pausing at each one for PatrolWaitTime seconds.
@@ -20,7 +20,8 @@ using UnityEngine.AI;
 // (Our additions: pause at each point, resume at the closest point,
 //  unreachable-point and stuck detection.)
 //
-// Later (B4/B5) Tick will also check the senses and switch to Chase or Investigate.
+// B4: Tick first checks sight. Sees the player -> Chase.
+// (B5 will add: hears a noise -> Investigate.)
 // ---------------------------------------------------------------------------
 public class PatrolState : CreatureState
 {
@@ -63,6 +64,13 @@ public class PatrolState : CreatureState
 
     public override void Tick()
     {
+        // Transition: Patrol -> Chase when the creature sees the player.
+        if (creature.Senses.CanSeePlayer)
+        {
+            creature.Fsm.ChangeState(creature.Chase);
+            return;
+        }
+
         if (creature.PatrolPoints.Count == 0)
         {
             return;

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 // ---------------------------------------------------------------------------
-// CreatureController  (B2, updated in B3)
+// CreatureController  (B2, updated in B3 and B4)
 //
 // The MonoBehaviour on the Creature. It is the "brain host":
 // - owns the NavMeshAgent
@@ -15,9 +15,11 @@ using UnityEngine.InputSystem.Controls;
 //
 // B3 added: the patrol point list, patrol speed / wait time / stuck timeout,
 // auto-finding the patrol points, and a gizmo that draws the patrol route.
-// Later tasks add: senses (B4/B5), IStunnable (B7).
+// B4 added: the link to CreatureSenses, and the chase settings.
+// Later tasks add: hearing (B5), attack settings (B6), IStunnable (B7).
 // ---------------------------------------------------------------------------
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(CreatureSenses))]
 public class CreatureController : MonoBehaviour
 {
     [Header("Patrol (B3)")]
@@ -39,6 +41,17 @@ public class CreatureController : MonoBehaviour
              "it gives up and goes to the next point (seconds).")]
     [SerializeField] private float stuckTimeout = 3f;
 
+    [Header("Chase (B4)")]
+    [Tooltip("Running speed while chasing the player (m/s).")]
+    [SerializeField] private float chaseSpeed = 4.5f;
+
+    [Tooltip("How often the chase target is updated (seconds). Not every frame = cheaper.")]
+    [SerializeField] private float chaseRepathInterval = 0.2f;
+
+    [Tooltip("After losing sight of the player, keep chasing towards the last seen position " +
+             "for this long before giving up and switching to Investigate (seconds).")]
+    [SerializeField] private float loseSightTime = 1.5f;
+
     [Header("Debug")]
     [Tooltip("Write every state change to the Console.")]
     [SerializeField] private bool logStateChanges = true;
@@ -52,6 +65,7 @@ public class CreatureController : MonoBehaviour
 
     // --- Things the states can use (read-only from outside) ---
     public NavMeshAgent Agent { get; private set; }
+    public CreatureSenses Senses { get; private set; }
     public StateMachine Fsm { get; private set; }
 
     public IReadOnlyList<Transform> PatrolPoints => patrolPoints;
@@ -59,6 +73,10 @@ public class CreatureController : MonoBehaviour
     public float PatrolWaitTime => patrolWaitTime;
     public float StuckTimeout => stuckTimeout;
     public bool LogPatrolPoints => logPatrolPoints;
+
+    public float ChaseSpeed => chaseSpeed;
+    public float ChaseRepathInterval => chaseRepathInterval;
+    public float LoseSightTime => loseSightTime;
 
     // The 5 states. Created once and reused (no new objects every switch).
     public PatrolState Patrol { get; private set; }
@@ -83,6 +101,14 @@ public class CreatureController : MonoBehaviour
     private void Awake()
     {
         Agent = GetComponent<NavMeshAgent>();
+        Senses = GetComponent<CreatureSenses>();
+        if (Senses == null)
+        {
+            // Safety net in case the component wasn't added in the Inspector.
+            Debug.LogWarning("[Creature] No CreatureSenses component found, so one was added at runtime. " +
+                             "Add it to the Creature prefab so its settings are saved.", this);
+            Senses = gameObject.AddComponent<CreatureSenses>();
+        }
 
         // Remove empty slots, then auto-fill if nothing was assigned.
         patrolPoints.RemoveAll(point => point == null);
