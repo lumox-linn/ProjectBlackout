@@ -1,5 +1,7 @@
 
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameUIManager : MonoBehaviour
 {
@@ -28,9 +30,60 @@ public class GameUIManager : MonoBehaviour
         ShowGameState(GameState.Menu);
     }
 
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().buildIndex
+        );
+    }
+
+
+
+    private void Update()
+    {
+        if (Keyboard.current == null)
+            return;
+
+        // ESC - Pause / Resume
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (settingsPanel.activeSelf)
+            {
+                CloseSettings();
+            }
+            else if (currentState == GameState.Playing)
+            {
+                PauseGame();
+            }
+            else if (currentState == GameState.Paused)
+            {
+                ResumeGame();
+            }
+        }
+
+        // TEMPORARY WIN TEST
+        if (Keyboard.current.f9Key.wasPressedThisFrame)
+        {
+            Debug.Log("F9 detected - WIN");
+            GameEvents.RaiseGameStateChanged(GameState.Won);
+        }
+
+        // TEMPORARY LOSE TEST
+        if (Keyboard.current.f10Key.wasPressedThisFrame)
+        {
+            Debug.Log("F10 detected - LOSE");
+            GameEvents.RaiseGameStateChanged(GameState.Lost);
+        }
+    }
+
+
     private void ShowGameState(GameState state)
     {
         currentState = state;
+
+        Time.timeScale = state == GameState.Paused ? 0f : 1f;
 
         mainMenuPanel.SetActive(state == GameState.Menu);
         hudPanel.SetActive(state == GameState.Playing ||
@@ -47,9 +100,31 @@ public class GameUIManager : MonoBehaviour
         GameEvents.RaiseGameStateChanged(GameState.Playing);
     }
 
+    public void PauseGame()
+    {
+        if (currentState == GameState.Playing)
+        {
+            GameEvents.RaiseGameStateChanged(GameState.Paused);
+        }
+    }
+
+    public void ResumeGame()
+    {
+        if (currentState == GameState.Paused)
+        {
+            GameEvents.RaiseGameStateChanged(GameState.Playing);
+        }
+    }
+
+    public void ReturnToMainMenu()
+    {
+        GameEvents.RaiseGameStateChanged(GameState.Menu);
+    }
+
     public void OpenSettings()
     {
         mainMenuPanel.SetActive(false);
+        pausePanel.SetActive(false);
         settingsPanel.SetActive(true);
     }
 
@@ -62,7 +137,6 @@ public class GameUIManager : MonoBehaviour
     public void QuitGame()
     {
         Debug.Log("Quit button clicked!");
-
         Application.Quit();
     }
 }
