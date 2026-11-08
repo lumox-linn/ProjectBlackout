@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // ---------------------------------------------------------------------------
-// CreatureSenses  (B4: sight. B5 will add hearing.)
+// CreatureSenses  (B4: sight, B5: hearing)
 //
 // Sight: the creature sees the player only if ALL THREE are true:
 //   1. Distance: the player is within viewDistance (12 m)
@@ -14,6 +14,13 @@ using UnityEngine;
 // The check runs a few times per second (sightCheckInterval), not every frame,
 // which saves performance. The states just read the results:
 //   CanSeePlayer, Player, LastSeenPlayerPosition, TimeSinceLastSeen.
+//
+// Hearing (B5): listens to NoiseSystem.OnNoise (Linn's shared Core script).
+// A noise is heard if the distance from the creature to the noise is
+// <= the noise's radius. Sound goes through walls, so no raycast here.
+// A heard noise is kept as "pending" for a short time; the current state
+// takes it with TryConsumeNoise(). States that don't care (Chase) just
+// ignore it and it's forgotten.
 //
 // Field-of-view technique (distance + angle + raycast) based on:
 //   Lague, S. (2015) "Field of view visualisation (E01)", YouTube
@@ -46,9 +53,19 @@ public class CreatureSenses : MonoBehaviour
     [Tooltip("The tag the player uses.")]
     [SerializeField] private string playerTag = "Player";
 
+    [Header("Hearing (B5)")]
+    [Tooltip("Multiplies every noise's radius. 1 = hear a noise exactly as far as its radius.")]
+    [SerializeField] private float hearingMultiplier = 1f;
+
+    [Tooltip("How long a heard noise waits for a state to react to it before it's forgotten (seconds).")]
+    [SerializeField] private float noiseMemoryTime = 0.5f;
+
     [Header("Debug")]
     [Tooltip("Write to the Console when the creature starts or stops seeing the player.")]
     [SerializeField] private bool logSightChanges = true;
+
+    [Tooltip("Write to the Console when the creature hears (or is too far from) a noise.")]
+    [SerializeField] private bool logNoises = true;
 
     // --- Results that the states read ---
     public bool CanSeePlayer { get; private set; }
@@ -59,9 +76,15 @@ public class CreatureSenses : MonoBehaviour
     // Seconds since the player was last seen (Infinity if never seen).
     public float TimeSinceLastSeen => HasSeenPlayer ? Time.time - lastSeenTime : Mathf.Infinity;
 
+    // Hearing results.
+    public bool HasHeardNoise { get; private set; }
+    public Vector3 LastNoisePosition { get; private set; }
+
     private Collider playerCollider;
     private float nextCheckTime;
     private float lastSeenTime;
+    private float lastNoiseTime;
+    private bool noisePending;
 
     private void Awake()
     {
@@ -73,6 +96,63 @@ public class CreatureSenses : MonoBehaviour
         {
             eyes = transform; // fallback: look from the creature's middle
         }
+    }
+
+    // Subscribe/unsubscribe to the shared noise event (as the Core script says).
+    // Unsubscribing in OnDisable stops errors if the creature is destroyed.
+    private void OnEnable()
+    {
+        NoiseSystem.OnNoise += HandleNoise;
+    }
+
+    private void OnDisable()
+    {
+        NoiseSystem.OnNoise -= HandleNoise;
+    }
+
+    private void HandleNoise(NoiseEvent noise)
+    {
+        // Ignore noises the creature makes itself.
+        if (noise.Source == gameObject)
+        {
+            return;
+        }
+
+        float distance = Vector3.Distance(transform.position, noise.Position);
+        float hearingRadius = noise.Radius * hearingMultiplier;
+        string sourceName = noise.Source != null ? noise.Source.name : "unknown";
+
+        if (distance > hearingRadius)
+        {
+            if (logNoises)
+            {
+                Debug.Log($"[Senses] Noise from {sourceName} too far away ({distance:F1} m > {hearingRadius:F1} m). Ignored.", this);
+            }
+            return;
+        }
+
+        LastNoisePosition = noise.Position;
+        lastNoiseTime = Time.time;
+        HasHeardNoise = true;
+        noisePending = true;
+
+        if (logNoises)
+        {
+            Debug.Log($"[Senses] Heard a noise from {sourceName}, {distance:F1} m away.", this);
+        }
+    }
+
+    // States call this to react to a noise. Returns true (once) if a recent noise is waiting.
+    public bool TryConsumeNoise(out Vector3 position)
+    {
+        position = LastNoisePosition;
+        if (!noisePending)
+        {
+            return false;
+        }
+
+        noisePending = false;
+        return Time.time - lastNoiseTime <= noiseMemoryTime;
     }
 
     private void Start()
@@ -189,6 +269,7 @@ public class CreatureSenses : MonoBehaviour
     // - the view cone: yellow = can't see the player, red = can see them
     // - a red line to the player while they're visible
     // - a magenta sphere at the last seen position when they're out of sight
+    // - a cyan sphere + line to the last heard noise (for 3 seconds)
     // ---------------------------------------------------------------------------
     private void OnDrawGizmos()
     {
@@ -226,6 +307,13 @@ public class CreatureSenses : MonoBehaviour
         {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireSphere(LastSeenPlayerPosition, 0.4f);
+        }
+
+        if (HasHeardNoise && Time.time - lastNoiseTime < 3f)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(LastNoisePosition, 0.5f);
+            Gizmos.DrawLine(transform.position, LastNoisePosition);
         }
     }
 }

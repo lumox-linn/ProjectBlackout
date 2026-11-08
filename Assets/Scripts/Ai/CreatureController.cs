@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 // ---------------------------------------------------------------------------
-// CreatureController  (B2, updated in B3 and B4)
+// CreatureController  (B2, updated in B3, B4 and B5)
 //
 // The MonoBehaviour on the Creature. It is the "brain host":
 // - owns the NavMeshAgent
@@ -16,7 +16,8 @@ using UnityEngine.InputSystem.Controls;
 // B3 added: the patrol point list, patrol speed / wait time / stuck timeout,
 // auto-finding the patrol points, and a gizmo that draws the patrol route.
 // B4 added: the link to CreatureSenses, and the chase settings.
-// Later tasks add: hearing (B5), attack settings (B6), IStunnable (B7).
+// B5 added: the investigate settings (speed, look-around time and angle).
+// Later tasks add: attack settings (B6), IStunnable (B7).
 // ---------------------------------------------------------------------------
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CreatureSenses))]
@@ -52,6 +53,16 @@ public class CreatureController : MonoBehaviour
              "for this long before giving up and switching to Investigate (seconds).")]
     [SerializeField] private float loseSightTime = 1.5f;
 
+    [Header("Investigate (B5)")]
+    [Tooltip("Walking speed while going to check a noise or the last seen position (m/s).")]
+    [SerializeField] private float investigateSpeed = 3f;
+
+    [Tooltip("How long the creature looks around after reaching the spot (seconds).")]
+    [SerializeField] private float lookAroundTime = 3f;
+
+    [Tooltip("How far it turns to each side while looking around (degrees).")]
+    [SerializeField] private float lookAroundAngle = 90f;
+
     [Header("Debug")]
     [Tooltip("Write every state change to the Console.")]
     [SerializeField] private bool logStateChanges = true;
@@ -77,6 +88,10 @@ public class CreatureController : MonoBehaviour
     public float ChaseSpeed => chaseSpeed;
     public float ChaseRepathInterval => chaseRepathInterval;
     public float LoseSightTime => loseSightTime;
+
+    public float InvestigateSpeed => investigateSpeed;
+    public float LookAroundTime => lookAroundTime;
+    public float LookAroundAngle => lookAroundAngle;
 
     // The 5 states. Created once and reused (no new objects every switch).
     public PatrolState Patrol { get; private set; }
