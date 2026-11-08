@@ -407,6 +407,7 @@ GameObject:
   - component: {fileID: 6463328293451668158}
   - component: {fileID: 5178154172374307863}
   - component: {fileID: 5477946016360261728}
+  - component: {fileID: -3745003975803729397}
   m_Layer: 0
   m_Name: Blackout_TestPlayer
   m_TagString: Player
@@ -558,6 +559,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutPlayerHealth
   maxHealth: 3
   debugDamageWithH: 1
+--- !u!114 &-3745003975803729397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5077536149420732138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b24f662dd39e1b742a3bb8d6c25662db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutGameOverUI
+  playerHealth: {fileID: 0}
+  gameOverPanel: {fileID: 3362265442085277258, guid: 40a0b297000107d45b1914b5d14042d5, type: 3}
+  panelsToHide: []
+  scriptsToDisable: []
 --- !u!1 &6754721767092433637
 GameObject:
   m_ObjectHideFlags: 0

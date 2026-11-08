@@ -3536,6 +3536,27 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &1977080420 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5077536149420732138, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
+  m_PrefabInstance: {fileID: 1385125432635961881}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1977080428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977080420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b24f662dd39e1b742a3bb8d6c25662db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutGameOverUI
+  playerHealth: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  panelsToHide: []
+  scriptsToDisable: []
 --- !u!1 &2065198130
 GameObject:
   m_ObjectHideFlags: 0
@@ -3793,7 +3814,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5077536149420732138, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1977080428}
   m_SourcePrefab: {fileID: 100100000, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
 --- !u!1001 &8101635756000221342
 PrefabInstance:

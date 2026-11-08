@@ -12,21 +12,26 @@ namespace ProjectBlackout.PlayerTest
         [Header("References")]
         [SerializeField] private Camera playerCamera;
         [SerializeField] private Transform holdPoint;
+        [SerializeField] private GameObject gloveVisual;
+
+        [Header("Glove Unlock")]
+        [SerializeField] private bool unlockedAtStart = false;
 
         [Header("Targeting / Physics")]
         [Min(1f)] public float pickupRange = 9f;
-        [Min(1f)] public float throwImpulse = 19f;
         [Min(1f)] public float pullGain = 5f;
         [Min(1f)] public float followAcceleration = 12f;
         [Min(1f)] public float maxPullSpeed = 11f;
         [Min(1f)] public float maxHoldSeparation = 12f;
 
+        [Header("Charge Throw Settings")]
+        [Min(1f)] public float throwImpulse = 19f;
+        [Min(1f)] public float maxThrowImpulse = 40f;
+        [Min(0.1f)] public float chargeDuration = 1.6f;
+
         [Header("Mouse Wheel Holding Distance")]
         [Min(0.1f)] public float scrollStep = 0.45f;
-
-        [Tooltip("Reverse the scroll-wheel movement.")]
         public bool reverseScrollDirection = true;
-
         [Min(0.5f)] public float minHoldDistance = 1.9f;
         [Min(0.5f)] public float maxHoldDistance = 5.5f;
 
@@ -39,51 +44,112 @@ namespace ProjectBlackout.PlayerTest
 
         private float holdDistance = 2.65f;
 
+        private bool hasGlove;
+        private bool isCharging;
+        private float chargedSeconds;
+
         public BlackoutMagneticObject HeldObject => held;
         public float HoldDistance => holdDistance;
+        public bool HasGlove => hasGlove;
+        public bool IsCharging => isCharging;
 
-        public void SetReferences(Camera camera, Transform targetHoldPoint)
+        public float Charge01 =>
+            Mathf.Clamp01(
+                chargedSeconds /
+                Mathf.Max(0.1f, chargeDuration)
+            );
+
+        public float CurrentThrowImpulse =>
+            Mathf.Lerp(
+                throwImpulse,
+                Mathf.Max(throwImpulse, maxThrowImpulse),
+                Charge01
+            );
+
+        public void SetReferences(
+            Camera camera,
+            Transform targetHoldPoint
+        )
         {
             playerCamera = camera;
             holdPoint = targetHoldPoint;
         }
 
+        public void SetGloveVisual(GameObject visual)
+        {
+            gloveVisual = visual;
+        }
+
+        public void UnlockGlove()
+        {
+            if (hasGlove)
+                return;
+
+            hasGlove = true;
+
+            if (gloveVisual != null)
+                gloveVisual.SetActive(true);
+
+            Debug.Log("Magnet glove unlocked!");
+        }
+
         private void Awake()
         {
+            hasGlove = unlockedAtStart;
+
+            if (gloveVisual != null)
+                gloveVisual.SetActive(hasGlove);
+
             if (holdPoint != null)
             {
                 holdDistance = Mathf.Clamp(
                     holdPoint.localPosition.z,
                     minHoldDistance,
-                    Mathf.Max(minHoldDistance, maxHoldDistance)
+                    maxHoldDistance
                 );
 
                 UpdateHoldPoint();
             }
         }
 
+        private void OnValidate()
+        {
+            maxThrowImpulse = Mathf.Max(
+                throwImpulse,
+                maxThrowImpulse
+            );
+
+            chargeDuration = Mathf.Max(
+                0.1f,
+                chargeDuration
+            );
+        }
+
         private void Update()
         {
-            if (Cursor.lockState != CursorLockMode.Locked ||
+            if (!hasGlove ||
+                !BlackoutGameMenu.IsGameplayActive ||
+                Cursor.lockState != CursorLockMode.Locked ||
                 playerCamera == null ||
                 holdPoint == null)
             {
                 if (held != null)
                     Release(false);
 
+                ResetCharge();
                 return;
             }
 
             if (held != null)
             {
-                // Drop when right-click is released.
+                // Releasing RMB drops the object.
                 if (!RightHeld())
                 {
                     Release(false);
                     return;
                 }
 
-                // Mouse wheel adjusts object distance.
+                // Mouse wheel controls holding distance.
                 float wheel = ReadWheel();
 
                 if (Mathf.Abs(wheel) > 0.0001f)
@@ -92,16 +158,33 @@ namespace ProjectBlackout.PlayerTest
                         reverseScrollDirection ? 1f : -1f;
 
                     holdDistance = Mathf.Clamp(
-                        holdDistance + wheel * scrollStep * direction,
+                        holdDistance +
+                        wheel * scrollStep * direction,
                         minHoldDistance,
-                        Mathf.Max(minHoldDistance, maxHoldDistance)
+                        maxHoldDistance
                     );
 
                     UpdateHoldPoint();
                 }
 
-                // Throw while holding.
-                if (LeftClick())
+                // Start charging when LMB is pressed.
+                if (LeftPressed())
+                {
+                    isCharging = true;
+                    chargedSeconds = 0f;
+                }
+
+                // Build charge while LMB is held.
+                if (isCharging && LeftHeld())
+                {
+                    chargedSeconds = Mathf.Min(
+                        chargeDuration,
+                        chargedSeconds + Time.deltaTime
+                    );
+                }
+
+                // Throw when LMB is released.
+                if (isCharging && LeftReleased())
                 {
                     Release(true);
                     return;
@@ -113,16 +196,6 @@ namespace ProjectBlackout.PlayerTest
             }
         }
 
-        private void UpdateHoldPoint()
-        {
-            if (holdPoint == null)
-                return;
-
-            Vector3 local = holdPoint.localPosition;
-            local.z = holdDistance;
-            holdPoint.localPosition = local;
-        }
-
         private void FixedUpdate()
         {
             if (held == null)
@@ -131,10 +204,18 @@ namespace ProjectBlackout.PlayerTest
             if (heldBody == null)
             {
                 held = null;
+                ResetCharge();
                 return;
             }
 
-            Vector3 gap = holdPoint.position - heldBody.position;
+            if (holdPoint == null)
+            {
+                Release(false);
+                return;
+            }
+
+            Vector3 gap =
+                holdPoint.position - heldBody.position;
 
             if (gap.magnitude > maxHoldSeparation)
             {
@@ -142,10 +223,11 @@ namespace ProjectBlackout.PlayerTest
                 return;
             }
 
-            Vector3 desiredVelocity = Vector3.ClampMagnitude(
-                gap * pullGain,
-                maxPullSpeed
-            );
+            Vector3 desiredVelocity =
+                Vector3.ClampMagnitude(
+                    gap * pullGain,
+                    maxPullSpeed
+                );
 
             Vector3 acceleration =
                 (desiredVelocity - heldBody.linearVelocity)
@@ -155,6 +237,16 @@ namespace ProjectBlackout.PlayerTest
                 acceleration,
                 ForceMode.Acceleration
             );
+        }
+
+        private void UpdateHoldPoint()
+        {
+            if (holdPoint == null)
+                return;
+
+            Vector3 position = holdPoint.localPosition;
+            position.z = holdDistance;
+            holdPoint.localPosition = position;
         }
 
         private void TryPickUp()
@@ -174,7 +266,8 @@ namespace ProjectBlackout.PlayerTest
             }
 
             BlackoutMagneticObject target =
-                hit.collider.GetComponentInParent<BlackoutMagneticObject>();
+                hit.collider.GetComponentInParent<
+                    BlackoutMagneticObject>();
 
             if (target == null ||
                 !target.canBePickedUp ||
@@ -183,10 +276,9 @@ namespace ProjectBlackout.PlayerTest
                 return;
             }
 
-            Rigidbody body =
-                target.Body != null
-                    ? target.Body
-                    : target.GetComponent<Rigidbody>();
+            Rigidbody body = target.Body != null
+                ? target.Body
+                : target.GetComponent<Rigidbody>();
 
             if (body == null || body.isKinematic)
                 return;
@@ -195,13 +287,15 @@ namespace ProjectBlackout.PlayerTest
             heldBody = body;
             held.IsHeld = true;
 
-            previousGravity = heldBody.useGravity;
-            previousLinearDamping = heldBody.linearDamping;
-            previousAngularDamping = heldBody.angularDamping;
+            previousGravity = body.useGravity;
+            previousLinearDamping = body.linearDamping;
+            previousAngularDamping = body.angularDamping;
 
-            heldBody.useGravity = false;
-            heldBody.linearDamping = 4f;
-            heldBody.angularDamping = 6f;
+            body.useGravity = false;
+            body.linearDamping = 4f;
+            body.angularDamping = 6f;
+
+            ResetCharge();
         }
 
         private void Release(bool throwObject)
@@ -214,15 +308,17 @@ namespace ProjectBlackout.PlayerTest
 
                 if (throwObject && playerCamera != null)
                 {
-                    // A4: Arm a recently thrown crate to stun IStunnable targets.
+                    // Preserve thrown-crate impact logic.
                     BlackoutImpactNoise impact =
-                        heldBody.GetComponent<BlackoutImpactNoise>();
+                        heldBody.GetComponent<
+                            BlackoutImpactNoise>();
 
                     if (impact != null)
                         impact.MarkThrown();
 
                     heldBody.AddForce(
-                        playerCamera.transform.forward * throwImpulse,
+                        playerCamera.transform.forward *
+                        CurrentThrowImpulse,
                         ForceMode.Impulse
                     );
                 }
@@ -233,50 +329,73 @@ namespace ProjectBlackout.PlayerTest
 
             held = null;
             heldBody = null;
+
+            ResetCharge();
+        }
+
+        private void ResetCharge()
+        {
+            isCharging = false;
+            chargedSeconds = 0f;
         }
 
         private void OnDisable()
         {
             if (held != null)
                 Release(false);
+
+            ResetCharge();
         }
 
         private void OnGUI()
         {
-            if (playerCamera == null || !enabled)
+            if (!enabled ||
+                !BlackoutGameMenu.IsGameplayActive)
                 return;
 
-            const float crossSize = 22f;
+            // Charge bar only appears while charging.
+            if (!isCharging || held == null)
+                return;
 
-            GUI.Label(
-                new Rect(
-                    Screen.width / 2f - crossSize / 2f,
-                    Screen.height / 2f - crossSize / 2f,
-                    crossSize,
-                    crossSize
-                ),
-                "+"
-            );
-
-            string state = held != null
-                ? "HOLDING: " + held.name +
-                  " | " + holdDistance.ToString("F1") + "m"
-                : "Aim at a teal metal crate; HOLD RMB to pull";
+            float barWidth = 250f;
+            float x = Screen.width / 2f - barWidth / 2f;
+            float y = Screen.height - 90f;
 
             GUI.Box(
-                new Rect(12f, 12f, 425f, 107f),
-                "BLACKOUT | PLAYER TEST\n" + state +
-                "\nHOLD RMB = magnet | Wheel = near/far | LMB = throw" +
-                "\nWASD move | Space jump | Shift sprint | F flashlight" +
-                "\nEsc unlock mouse | Click to relock"
+                new Rect(x - 10f, y - 28f, 270f, 75f),
+                "THROW CHARGE: " +
+                Mathf.RoundToInt(Charge01 * 100f) + "%"
             );
+
+            GUI.Box(
+                new Rect(x, y + 3f, barWidth, 20f),
+                GUIContent.none
+            );
+
+            Color previousColor = GUI.color;
+
+            GUI.color = Charge01 >= 1f
+                ? Color.green
+                : Color.cyan;
+
+            GUI.DrawTexture(
+                new Rect(
+                    x + 2f,
+                    y + 5f,
+                    (barWidth - 4f) * Charge01,
+                    16f
+                ),
+                Texture2D.whiteTexture
+            );
+
+            GUI.color = previousColor;
         }
 
         private static bool RightPressed()
         {
 #if ENABLE_INPUT_SYSTEM
             return Mouse.current != null &&
-                   Mouse.current.rightButton.wasPressedThisFrame;
+                Mouse.current.rightButton.wasPressedThisFrame;
 #elif ENABLE_LEGACY_INPUT_MANAGER
             return Input.GetMouseButtonDown(1);
 #else
@@ -288,7 +407,7 @@ namespace ProjectBlackout.PlayerTest
         {
 #if ENABLE_INPUT_SYSTEM
             return Mouse.current != null &&
-                   Mouse.current.rightButton.isPressed;
+                Mouse.current.rightButton.isPressed;
 #elif ENABLE_LEGACY_INPUT_MANAGER
             return Input.GetMouseButton(1);
 #else
@@ -296,13 +415,37 @@ namespace ProjectBlackout.PlayerTest
 #endif
         }
 
-        private static bool LeftClick()
+        private static bool LeftPressed()
         {
 #if ENABLE_INPUT_SYSTEM
             return Mouse.current != null &&
-                   Mouse.current.leftButton.wasPressedThisFrame;
+                Mouse.current.leftButton.wasPressedThisFrame;
 #elif ENABLE_LEGACY_INPUT_MANAGER
             return Input.GetMouseButtonDown(0);
+#else
+            return false;
+#endif
+        }
+
+        private static bool LeftHeld()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current != null &&
+                Mouse.current.leftButton.isPressed;
+#elif ENABLE_LEGACY_INPUT_MANAGER
+            return Input.GetMouseButton(0);
+#else
+            return false;
+#endif
+        }
+
+        private static bool LeftReleased()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current != null &&
+                Mouse.current.leftButton.wasReleasedThisFrame;
+#elif ENABLE_LEGACY_INPUT_MANAGER
+            return Input.GetMouseButtonUp(0);
 #else
             return false;
 #endif

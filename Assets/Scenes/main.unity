@@ -281,6 +281,22 @@ Transform:
   - {fileID: 889233518}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &427851654 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 560599675909494948, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
+  m_PrefabInstance: {fileID: 1887783225}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &427851659 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5350198956494868396, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
+  m_PrefabInstance: {fileID: 1887783225}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230b55cf9c71c864e97b5e11b8ae8ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutMagnetGlove
 --- !u!1001 &485379793
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -680,6 +696,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3745003975803729397, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
+      propertyPath: gameOverPanel
+      value: 
+      objectReference: {fileID: 3362265442085277258, guid: 40a0b297000107d45b1914b5d14042d5, type: 3}
     - target: {fileID: 5006275091407228299, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20
@@ -862,7 +882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4668977602812827220, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -936,6 +956,71 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad61f16747115a345a187e229f9cdde9, type: 3}
+--- !u!1001 &8966082812995040716
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10.108
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.644
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225685007593625389, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5595529160993628942, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: glove
+      value: 
+      objectReference: {fileID: 427851659}
+    - target: {fileID: 5595529160993628942, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 427851654}
+    - target: {fileID: 6865434573283316923, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
+      propertyPath: m_Name
+      value: MagnetGlovePickup
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -947,3 +1032,4 @@ SceneRoots:
   - {fileID: 337600049}
   - {fileID: 2051456150}
   - {fileID: 2026400515}
+  - {fileID: 8966082812995040716}
