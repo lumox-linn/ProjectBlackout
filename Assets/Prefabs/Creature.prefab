@@ -105,6 +105,8 @@ GameObject:
   - component: {fileID: 1992002201009128417}
   - component: {fileID: 1626807806187026765}
   - component: {fileID: 3355471027637511207}
+  - component: {fileID: 5285621913965069331}
+  - component: {fileID: 6835708288027798148}
   m_Layer: 0
   m_Name: Creature
   m_TagString: Untagged
@@ -272,3 +274,32 @@ MonoBehaviour:
   target: {fileID: 0}
   repathInterval: 0.25
   repathDistance: 0.5
+--- !u!114 &5285621913965069331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638103117708522086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c72c4512f2d13418b96b808adbae62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreatureController
+  logStateChanges: 1
+  debugKeys: 1
+--- !u!114 &6835708288027798148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638103117708522086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e760f3b15f181f94e8a66ae66cbe057b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreatureStateLabel
+  showInGame: 1
+  heightOffset: 1.5
+  fontSize: 20
