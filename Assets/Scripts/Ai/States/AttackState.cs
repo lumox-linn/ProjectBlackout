@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // ---------------------------------------------------------------------------
-// AttackState  (B6)
+// AttackState  (B6, min time in state added in B8)
 //
 // The player is in reach: stop, face them, and hit them on a timer.
 // - Enter: stop moving, take over rotation, start the wind-up timer.
@@ -16,7 +16,8 @@ using UnityEngine.AI;
 //
 // Transitions:
 //   Attack -> Chase   player further than AttackRange + AttackRangeBuffer,
-//                     or out of sight (Chase then handles losing them)
+//                     or out of sight (Chase then handles losing them).
+//                     Waits for the minimum time in state (B8).
 // ---------------------------------------------------------------------------
 public class AttackState : CreatureState
 {
@@ -51,9 +52,15 @@ public class AttackState : CreatureState
         // Transition: Attack -> Chase when the player gets away or out of sight.
         // The buffer means it doesn't flicker Attack/Chase/Attack at the edge of the range.
         bool tooFar = creature.FlatDistanceToPlayer() > creature.AttackRange + creature.AttackRangeBuffer;
-        if (tooFar || !senses.CanSeePlayer)
+        bool playerEscaped = tooFar || !senses.CanSeePlayer;
+
+        if (playerEscaped)
         {
-            creature.Fsm.ChangeState(creature.Chase);
+            if (creature.Fsm.CanLeaveState)
+            {
+                creature.Fsm.ChangeState(creature.Chase);
+            }
+            // Not allowed to leave yet (B8): wait, but never hit someone out of reach.
             return;
         }
 

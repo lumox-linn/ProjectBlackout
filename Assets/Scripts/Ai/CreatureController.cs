@@ -3,9 +3,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.Serialization;
 
 // ---------------------------------------------------------------------------
-// CreatureController  (B2, updated in B3, B4, B5, B6 and B7)
+// CreatureController  (B2, updated in B3-B8)
 //
 // The MonoBehaviour on the Creature. It is the "brain host":
 // - owns the NavMeshAgent
@@ -20,6 +21,8 @@ using UnityEngine.InputSystem.Controls;
 // B6 added: the attack settings, FlatDistanceToPlayer(), attack range gizmo.
 // B7 added: implements IStunnable (Core) so thrown crates can stun it,
 //           with immunity after a stun. Debug key 5 now calls Stun().
+// B8 added: Min Time In State (anti-flicker), and renamed the patrol log
+//           option to "Log State Details" (it covers Patrol and Investigate).
 // ---------------------------------------------------------------------------
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CreatureSenses))]
@@ -93,12 +96,19 @@ public class CreatureController : MonoBehaviour, IStunnable
     [Tooltip("Stun length used by debug key 5 and 'Debug: Stun' (a real crate passes its own time).")]
     [SerializeField] private float debugStunSeconds = 3f;
 
+    [Header("Transitions (B8)")]
+    [Tooltip("Minimum time in a state before a normal (sense-based) transition is allowed (seconds). " +
+             "Stops the creature flickering between states. Stuns always happen immediately.")]
+    [SerializeField] private float minTimeInState = 0.5f;
+
     [Header("Debug")]
     [Tooltip("Write every state change to the Console.")]
     [SerializeField] private bool logStateChanges = true;
 
-    [Tooltip("Write a Console line each time a patrol point is reached.")]
-    [SerializeField] private bool logPatrolPoints = true;
+    [Tooltip("Write extra Console lines for Patrol and Investigate " +
+             "(patrol point reached, going to check, looking around...).")]
+    [FormerlySerializedAs("logPatrolPoints")]
+    [SerializeField] private bool logStateDetails = true;
 
     [Tooltip("In Play mode, click the Game view, then press 1-5 (number row or number pad): " +
              "1 Patrol, 2 Investigate, 3 Chase, 4 Attack, 5 Stun (like a crate hit). For testing only.")]
@@ -113,7 +123,7 @@ public class CreatureController : MonoBehaviour, IStunnable
     public float PatrolSpeed => patrolSpeed;
     public float PatrolWaitTime => patrolWaitTime;
     public float StuckTimeout => stuckTimeout;
-    public bool LogPatrolPoints => logPatrolPoints;
+    public bool LogStateDetails => logStateDetails;
 
     public float ChaseSpeed => chaseSpeed;
     public float ChaseRepathInterval => chaseRepathInterval;
@@ -194,7 +204,7 @@ public class CreatureController : MonoBehaviour, IStunnable
                              $"smaller than Attack Range ({attackRange}), or the creature can't reach attack range.", this);
         }
 
-        Fsm = new StateMachine(this, logStateChanges);
+        Fsm = new StateMachine(this, logStateChanges, minTimeInState);
 
         Patrol = new PatrolState(this);
         Investigate = new InvestigateState(this);
@@ -211,8 +221,9 @@ public class CreatureController : MonoBehaviour, IStunnable
 
     private void Update()
     {
-        // Lets you tick/untick "Log State Changes" during Play mode.
+        // Lets you change these in the Inspector during Play mode.
         Fsm.LogChanges = logStateChanges;
+        Fsm.MinTimeInState = minTimeInState;
 
         if (debugKeys)
         {

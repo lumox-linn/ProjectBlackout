@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // ---------------------------------------------------------------------------
-// PatrolState  (B3, sight check added in B4, hearing added in B5)
+// PatrolState  (B3; sight B4; hearing B5; min time in state B8)
 //
 // Walks between the patrol points in a loop (1 -> 2 -> ... -> 10 -> 1 ...),
 // pausing at each one for PatrolWaitTime seconds.
@@ -23,6 +23,7 @@ using UnityEngine.AI;
 // Transitions (checked first in Tick, in this order):
 //   Patrol -> Chase        sees the player                 (B4)
 //   Patrol -> Investigate  hears a noise within its radius (B5)
+// Both only once the minimum time in state has passed (B8).
 // ---------------------------------------------------------------------------
 public class PatrolState : CreatureState
 {
@@ -66,14 +67,14 @@ public class PatrolState : CreatureState
     public override void Tick()
     {
         // Transition: Patrol -> Chase when the creature sees the player.
-        if (creature.Senses.CanSeePlayer)
+        if (creature.Fsm.CanLeaveState && creature.Senses.CanSeePlayer)
         {
             creature.Fsm.ChangeState(creature.Chase);
             return;
         }
 
         // Transition: Patrol -> Investigate when the creature hears a noise.
-        if (creature.Senses.TryConsumeNoise(out Vector3 noisePosition))
+        if (creature.Fsm.CanLeaveState && creature.Senses.TryConsumeNoise(out Vector3 noisePosition))
         {
             creature.Investigate.SetTarget(noisePosition, "noise");
             creature.Fsm.ChangeState(creature.Investigate);
@@ -127,7 +128,7 @@ public class PatrolState : CreatureState
         // 4) Arrived? Pause here.
         if (agent.remainingDistance <= agent.stoppingDistance + ArriveTolerance)
         {
-            if (creature.LogPatrolPoints)
+            if (creature.LogStateDetails)
             {
                 Debug.Log($"[Patrol] Reached {CurrentPoint.name} ({targetIndex + 1}/{creature.PatrolPoints.Count})", creature);
             }
