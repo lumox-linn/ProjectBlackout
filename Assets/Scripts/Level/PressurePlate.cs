@@ -17,6 +17,9 @@ public class PressurePlate : MonoBehaviour
     [Tooltip("Tick for one-time plates: the door stays open even if the crate is taken off.")]
     [SerializeField] private bool stayOpen = false;
 
+    [Tooltip("Objective completed when this plate is first pressed (leave empty for none).")]
+    [SerializeField] private string objectiveId = "";
+
     // Every heavy object on the plate right now. A HashSet stores each one only once.
     private readonly HashSet<Rigidbody> heavyThings = new HashSet<Rigidbody>();
     private bool lockedOpen;
@@ -49,6 +52,9 @@ public class PressurePlate : MonoBehaviour
 
         if (door != null)
             door.SetOpen(IsPressed);
+
+        if (IsPressed && !string.IsNullOrEmpty(objectiveId) && ObjectiveManager.Instance != null)
+            ObjectiveManager.Instance.Complete(objectiveId);
 
         if (IsPressed && stayOpen)
             lockedOpen = true;
