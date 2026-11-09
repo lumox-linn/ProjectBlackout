@@ -2008,6 +2008,7 @@ MonoBehaviour:
   door: {fileID: 3723235244421085582}
   requiredMass: 1
   stayOpen: 1
+  objectiveId: tutorial
 --- !u!1 &2066251347356745305
 GameObject:
   m_ObjectHideFlags: 0
@@ -3973,6 +3974,7 @@ MonoBehaviour:
   door: {fileID: 3723235244421085582}
   requiredMass: 5
   stayOpen: 0
+  objectiveId: plate
 --- !u!1 &4135073999244057002
 GameObject:
   m_ObjectHideFlags: 0
