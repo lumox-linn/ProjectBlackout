@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -8,19 +8,24 @@ using UnityEngine.InputSystem;
 
 namespace ProjectBlackout.PlayerTest
 {
+    /// <summary>
+    /// Aprial-owned adapter for the existing GameManager/GameUIManager/Canvas.
+    /// Does not change or overwrite teammates' scripts or prefabs.
+    /// Runs ONLY in a scene containing the Aprial player and both team managers.
+    ///
+    /// GameManager stays authoritative for state and Esc. GameUIManager's Update
+    /// is disabled at runtime to prevent it from handling the SAME Esc press.
+    /// Existing menu graphics and settings sliders remain intact.
+    /// </summary>
     [DefaultExecutionOrder(500)]
     public sealed class BlackoutUIBridge : MonoBehaviour
     {
         public static BlackoutUIBridge Instance { get; private set; }
 
-        public static bool SettingsOpen =>
-            Instance != null && Instance.settingsOpen;
-
-        private static bool autoPlayAfterReload;
+        public static bool SettingsOpen => Instance != null && Instance.settingsOpen;
 
         private GameManager gameManager;
         private GameUIManager teamUIManager;
-
         private GameObject mainMenuPanel;
         private GameObject hudPanel;
         private GameObject pausePanel;
@@ -29,42 +34,42 @@ namespace ProjectBlackout.PlayerTest
         private GameObject losePanel;
 
         private bool settingsOpen;
-        private bool initialized;
-        private bool syncedState;
         private bool pendingEnableGameManager;
         private bool wasTeamUIManagerEnabled;
+        private bool syncedState;
+        private bool initialized;
 
-        [RuntimeInitializeOnLoadMethod(
-            RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void RegisterSceneLoad()
+        // RuntimeInitializeOnLoadMethod(AfterSceneLoad) runs for the first scene only.
+        // A restart reloads the scene, so reinstall our runtime-only UI bridge each time.
+        // Registering in SubsystemRegistration also works when Unity's domain reload
+        // is disabled under Enter Play Mode Options.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void RegisterSceneReloadHook()
         {
-            autoPlayAfterReload = false;
-
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        private static void OnSceneLoaded(
-            Scene scene,
-            LoadSceneMode mode)
+        private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             InstallInAprialScene();
         }
 
-        [RuntimeInitializeOnLoadMethod(
-            RuntimeInitializeLoadType.AfterSceneLoad)]
+        // Attach automatically, so no scene/prefab from another member needs editing.
+        // Also runs on the initial scene; duplicate installs are prevented below.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void InstallInAprialScene()
         {
             if (FindFirstObjectByType<BlackoutFPSInput>() == null ||
                 FindFirstObjectByType<GameManager>() == null ||
                 FindFirstObjectByType<GameUIManager>() == null ||
                 FindFirstObjectByType<BlackoutUIBridge>() != null)
-            {
                 return;
-            }
 
-            new GameObject("Aprial_UIBridge_Runtime")
-                .AddComponent<BlackoutUIBridge>();
+            GameObject bridge = new GameObject("Aprial_UIBridge_Runtime");
+            bridge.AddComponent<BlackoutUIBridge>();
+            Debug.Log("[Aprial] UI bridge installed in scene: " +
+                      SceneManager.GetActiveScene().name);
         }
 
         private void Awake()
@@ -76,7 +81,6 @@ namespace ProjectBlackout.PlayerTest
             }
 
             Instance = this;
-
             gameManager = FindFirstObjectByType<GameManager>();
             teamUIManager = FindFirstObjectByType<GameUIManager>();
         }
@@ -90,166 +94,117 @@ namespace ProjectBlackout.PlayerTest
         {
             if (gameManager == null || teamUIManager == null)
             {
-                Debug.LogError(
-                    "BlackoutUIBridge: GameManager or GameUIManager not found.",
-                    this
-                );
-
+                Debug.LogWarning("BlackoutUIBridge: missing team GameManager / GameUIManager.", this);
                 enabled = false;
                 return;
             }
 
-            // Prevent both UI scripts processing Escape.
+            // The team's GameUIManager also reads Escape and changes Time.timeScale.
+            // Disable THAT COMPONENT AT RUNTIME only; do not edit its source/prefab.
             wasTeamUIManagerEnabled = teamUIManager.enabled;
             teamUIManager.enabled = false;
 
-            Transform root = teamUIManager.transform.parent != null
+            Transform uiRoot = teamUIManager.transform.parent != null
                 ? teamUIManager.transform.parent
                 : teamUIManager.transform;
 
-            mainMenuPanel = FindPanel(root, "MainMenuPanel");
-            hudPanel = FindPanel(root, "HUDPanel");
-            pausePanel = FindPanel(root, "PausePanel");
-            settingsPanel = FindPanel(root, "SettingsPanel");
-            winPanel = FindPanel(root, "WinPanel");
-            losePanel = FindPanel(root, "LosePanel");
+            mainMenuPanel = FindChild(uiRoot, "MainMenuPanel");
+            hudPanel = FindChild(uiRoot, "HUDPanel");
+            pausePanel = FindChild(uiRoot, "PausePanel");
+            settingsPanel = FindChild(uiRoot, "SettingsPanel");
+            winPanel = FindChild(uiRoot, "WinPanel");
+            losePanel = FindChild(uiRoot, "LosePanel");
 
-            if (mainMenuPanel == null ||
-                hudPanel == null ||
-                pausePanel == null ||
-                settingsPanel == null ||
-                winPanel == null ||
-                losePanel == null)
+            if (mainMenuPanel == null || hudPanel == null ||
+                pausePanel == null || settingsPanel == null ||
+                winPanel == null || losePanel == null)
             {
                 Debug.LogError(
-                    "BlackoutUIBridge: One or more UI panels are missing.",
-                    this
-                );
-
+                    "BlackoutUIBridge: one or more UI panels were not found under GameUISystem. " +
+                    "Verify Canvas contains MainMenuPanel, HUDPanel, PausePanel, " +
+                    "SettingsPanel, WinPanel and LosePanel.", this);
                 teamUIManager.enabled = wasTeamUIManagerEnabled;
                 enabled = false;
                 return;
             }
 
+            WireExistingButtons();
+            initialized = true;
+            settingsOpen = false;
+
+            // GameManager.Start() has already run (this class executes later).
+            gameManager.SetGameState(GameState.Menu);
+            RefreshPanels();
+        }
+
+        private static GameObject FindChild(Transform parent, string targetName)
+        {
+            foreach (Transform child in parent.GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name == targetName)
+                    return child.gameObject;
+            }
+            return null;
+        }
+
+        private void WireExistingButtons()
+        {
+            // Overwrite ONLY runtime onClick events for navigation buttons.
+            // Serialized events on teammates' prefab assets are never saved/modified.
             WirePanelButtons(mainMenuPanel);
             WirePanelButtons(pausePanel);
             WirePanelButtons(settingsPanel);
             WirePanelButtons(winPanel);
             WirePanelButtons(losePanel);
-
-            initialized = true;
-            settingsOpen = false;
-
-            // Restart button: load a fresh level and enter gameplay.
-            // Main Menu button: load a fresh level but show the menu.
-            bool startGameNow = autoPlayAfterReload;
-            autoPlayAfterReload = false;
-
-            gameManager.SetGameState(GameState.Menu);
-            RefreshPanels();
-
-            if (startGameNow)
-            {
-                BeginPlaying();
-            }
-        }
-
-        private static GameObject FindPanel(
-            Transform root,
-            string panelName)
-        {
-            foreach (Transform child in
-                     root.GetComponentsInChildren<Transform>(true))
-            {
-                if (child.name == panelName)
-                {
-                    return child.gameObject;
-                }
-            }
-
-            return null;
         }
 
         private void WirePanelButtons(GameObject panel)
         {
-            foreach (Button button in
-                     panel.GetComponentsInChildren<Button>(true))
+            foreach (Button button in panel.GetComponentsInChildren<Button>(true))
             {
-                string name = button.gameObject.name
-                    .Trim()
-                    .ToLowerInvariant();
-
+                string name = button.gameObject.name.Trim().ToLowerInvariant();
                 System.Action action = null;
 
-                switch (name)
-                {
-                    case "playbutton":
-                    case "play":
-                    case "startbutton":
-                        action = BeginPlaying;
-                        break;
-
-                    case "resume":
-                    case "resumebutton":
-                        action = ResumePlaying;
-                        break;
-
-                    case "settings":
-                    case "settingsbutton":
-                        action = OpenSettings;
-                        break;
-
-                    case "back":
-                    case "backbutton":
-                        action = CloseSettings;
-                        break;
-
-                    case "mainmenu":
-                    case "mainmenubutton":
-                        action = ReturnToMenu;
-                        break;
-
-                    case "restart":
-                    case "restartbutton":
-                        action = Restart;
-                        break;
-
-                    case "quit":
-                    case "quitbutton":
-                        action = Quit;
-                        break;
-                }
+                if (name == "playbutton" || name == "play" || name == "startbutton")
+                    action = BeginPlaying;
+                else if (name == "resume" || name == "resumebutton")
+                    action = ResumePlaying;
+                else if (name == "settings" || name == "settingsbutton")
+                    action = OpenSettings;
+                else if (name == "backbutton" || name == "back")
+                    action = CloseSettings;
+                else if (name == "mainmenu" || name == "mainmenubutton")
+                    action = ReturnToMenu;
+                else if (name == "restartbutton" || name == "restart")
+                    action = Restart;
+                else if (name == "quitbutton" || name == "quit")
+                    action = Quit;
 
                 if (action == null)
-                {
                     continue;
-                }
 
-                // Replace old callbacks at runtime only.
-                // The original prefab is not modified.
                 button.onClick = new Button.ButtonClickedEvent();
                 button.onClick.AddListener(() => action());
             }
         }
 
+        // Existing GameManager.Update() handles Escape in Playing/Paused.
+        // While Settings is open, we disable its Update until Settings closes,
+        // so Escape closes Settings instead of accidentally resuming gameplay.
         private void Update()
         {
             if (!initialized)
-            {
                 return;
-            }
 
 #if ENABLE_INPUT_SYSTEM
-            // Keep existing F9 win / F10 lose testing.
-            if (Keyboard.current != null &&
-                gameManager.CurrentState == GameState.Playing)
+            // Preserve the team's temporary win/lose keyboard tests.
+            if (Keyboard.current != null && gameManager.CurrentState == GameState.Playing)
             {
                 if (Keyboard.current.f9Key.wasPressedThisFrame)
                 {
                     gameManager.WinGame();
                     return;
                 }
-
                 if (Keyboard.current.f10Key.wasPressedThisFrame)
                 {
                     gameManager.LoseGame();
@@ -259,26 +214,20 @@ namespace ProjectBlackout.PlayerTest
 #endif
 
             if (settingsOpen && EscapePressed())
-            {
                 CloseSettings();
-            }
         }
 
         private void LateUpdate()
         {
             if (!initialized)
-            {
                 return;
-            }
 
+            // Re-enable only AFTER all Update calls for this frame have completed.
             if (pendingEnableGameManager)
             {
                 pendingEnableGameManager = false;
-
                 if (gameManager != null)
-                {
                     gameManager.enabled = true;
-                }
             }
 
             ApplyCursor();
@@ -287,11 +236,10 @@ namespace ProjectBlackout.PlayerTest
         private void OnTeamStateChanged(GameState state)
         {
             if (gameManager == null)
-            {
                 return;
-            }
 
-            // Synchronize external GameEvents with GameManager.
+            // Some existing UI methods raise GameEvents directly instead of
+            // GameManager.SetGameState(). Keep the authoritative manager in sync.
             if (!syncedState && gameManager.CurrentState != state)
             {
                 syncedState = true;
@@ -302,80 +250,41 @@ namespace ProjectBlackout.PlayerTest
             if (initialized)
             {
                 settingsOpen = false;
-
-                if (!gameManager.enabled)
-                {
+                if (gameManager != null && !gameManager.enabled)
                     pendingEnableGameManager = true;
-                }
-
                 RefreshPanels();
             }
         }
 
         private void RefreshPanels()
         {
+            if (gameManager == null)
+                return;
+
             GameState state = gameManager.CurrentState;
 
-            mainMenuPanel.SetActive(
-                !settingsOpen && state == GameState.Menu
-            );
-
-            hudPanel.SetActive(
-                state == GameState.Playing ||
-                state == GameState.Paused
-            );
-
-            pausePanel.SetActive(
-                !settingsOpen && state == GameState.Paused
-            );
-
+            mainMenuPanel.SetActive(!settingsOpen && state == GameState.Menu);
+            pausePanel.SetActive(!settingsOpen && state == GameState.Paused);
             settingsPanel.SetActive(settingsOpen);
+            hudPanel.SetActive(state == GameState.Playing || state == GameState.Paused);
+            winPanel.SetActive(!settingsOpen && state == GameState.Won);
+            losePanel.SetActive(!settingsOpen && state == GameState.Lost);
 
-            winPanel.SetActive(
-                !settingsOpen && state == GameState.Won
-            );
-
-            losePanel.SetActive(
-                !settingsOpen && state == GameState.Lost
-            );
-
-            Time.timeScale =
-                state == GameState.Playing && !settingsOpen
-                ? 1f
-                : 0f;
-
+            Time.timeScale = state == GameState.Playing && !settingsOpen ? 1f : 0f;
             ApplyCursor();
         }
 
         private void ApplyCursor()
         {
-            bool playing =
-                gameManager != null &&
-                gameManager.CurrentState == GameState.Playing &&
-                !settingsOpen;
-
-            Cursor.lockState = playing
-                ? CursorLockMode.Locked
-                : CursorLockMode.None;
-
+            bool playing = gameManager != null &&
+                           gameManager.CurrentState == GameState.Playing &&
+                           !settingsOpen;
+            Cursor.lockState = playing ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !playing;
         }
 
         public void BeginPlaying()
         {
-            if (gameManager == null)
-            {
-                return;
-            }
-
-            // Never resume a dead player or completed game.
-            if (gameManager.CurrentState == GameState.Lost ||
-                gameManager.CurrentState == GameState.Won)
-            {
-                Restart();
-                return;
-            }
-
             settingsOpen = false;
             gameManager.SetGameState(GameState.Playing);
         }
@@ -383,69 +292,48 @@ namespace ProjectBlackout.PlayerTest
         public void ResumePlaying()
         {
             if (gameManager.CurrentState == GameState.Paused)
-            {
                 gameManager.ResumeGame();
-            }
             else
-            {
                 BeginPlaying();
-            }
         }
 
         public void OpenSettings()
         {
             if (gameManager.CurrentState == GameState.Playing)
-            {
                 gameManager.PauseGame();
-            }
 
             if (gameManager.CurrentState != GameState.Menu &&
                 gameManager.CurrentState != GameState.Paused)
-            {
                 return;
-            }
 
             settingsOpen = true;
-            gameManager.enabled = false;
-
+            gameManager.enabled = false; // prevent Escape double handling in Settings
             RefreshPanels();
         }
 
         public void CloseSettings()
         {
             if (!settingsOpen)
-            {
                 return;
-            }
 
             settingsOpen = false;
             pendingEnableGameManager = true;
-
             RefreshPanels();
         }
 
-        // MAIN MENU: reload the scene, then display the home screen.
         public void ReturnToMenu()
         {
-            ReloadLevel(false);
+            settingsOpen = false;
+            gameManager.enabled = true;
+            gameManager.SetGameState(GameState.Menu);
+            RefreshPanels();
         }
 
-        // RESTART: reload the scene, then start gameplay automatically.
         public void Restart()
         {
-            ReloadLevel(true);
-        }
-
-        private static void ReloadLevel(bool autoPlay)
-        {
-            autoPlayAfterReload = autoPlay;
-
-            // Reset timeScale so reloading works from death/pause.
-            Time.timeScale = 1f;
-
-            SceneManager.LoadScene(
-                SceneManager.GetActiveScene().name
-            );
+            settingsOpen = false;
+            gameManager.enabled = true;
+            gameManager.RestartGame();
         }
 
         public void Quit()
@@ -453,7 +341,7 @@ namespace ProjectBlackout.PlayerTest
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+            gameManager.QuitGame();
 #endif
         }
 
@@ -465,21 +353,13 @@ namespace ProjectBlackout.PlayerTest
         private void OnDestroy()
         {
             if (Instance != this)
-            {
                 return;
-            }
 
             Instance = null;
-
             if (teamUIManager != null)
-            {
                 teamUIManager.enabled = wasTeamUIManagerEnabled;
-            }
-
             if (gameManager != null)
-            {
                 gameManager.enabled = true;
-            }
         }
 
         private static bool EscapePressed()
