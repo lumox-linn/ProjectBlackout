@@ -6,7 +6,7 @@ using UnityEngine.InputSystem.Controls;
 using UnityEngine.Serialization;
 
 // ---------------------------------------------------------------------------
-// CreatureController  (B2, updated in B3-B8)
+// CreatureController  (B2, updated in B3-B9)
 //
 // The MonoBehaviour on the Creature. It is the "brain host":
 // - owns the NavMeshAgent
@@ -23,6 +23,8 @@ using UnityEngine.Serialization;
 //           with immunity after a stun. Debug key 5 now calls Stun().
 // B8 added: Min Time In State (anti-flicker), and renamed the patrol log
 //           option to "Log State Details" (it covers Patrol and Investigate).
+// B9 added: the AttackSwing event, so CreatureAnimation can play the attack
+//           animation at the start of each swing.
 // ---------------------------------------------------------------------------
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CreatureSenses))]
@@ -77,10 +79,11 @@ public class CreatureController : MonoBehaviour, IStunnable
              "Stops it flickering between Attack and Chase at the edge of the range.")]
     [SerializeField] private float attackRangeBuffer = 0.4f;
 
-    [Tooltip("Delay before the FIRST hit after reaching the player (seconds). Gives the player a moment to react.")]
+    [Tooltip("Time from the start of a swing to the moment it hits (seconds). " +
+             "Match it to the attack animation. The player can dodge by escaping before it lands.")]
     [SerializeField] private float attackWindup = 0.4f;
 
-    [Tooltip("Time between hits (seconds).")]
+    [Tooltip("Time between the start of one swing and the next (seconds).")]
     [SerializeField] private float attackCooldown = 1.2f;
 
     [Tooltip("Damage per hit. The player dies after 3 hits.")]
@@ -139,6 +142,14 @@ public class CreatureController : MonoBehaviour, IStunnable
     public float AttackCooldown => attackCooldown;
     public int AttackDamage => attackDamage;
     public float AttackTurnSpeed => attackTurnSpeed;
+
+    // B9: raised when an attack swing starts (CreatureAnimation plays the attack animation).
+    public event System.Action AttackSwing;
+
+    public void RaiseAttackSwing()
+    {
+        AttackSwing?.Invoke();
+    }
 
     // True while the creature can't be stunned (shortly after a stun).
     public bool IsStunImmune => Time.time < stunImmuneUntil;

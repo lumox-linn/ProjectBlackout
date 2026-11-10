@@ -2,13 +2,15 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // ---------------------------------------------------------------------------
-// AttackState  (B6, min time in state added in B8)
+// AttackState  (B6; min time in state B8; swing/hit timing B9)
 //
-// The player is in reach: stop, face them, and hit them on a timer.
-// - Enter: stop moving, take over rotation, start the wind-up timer.
-// - Tick:  turn towards the player; when the timer runs out, hit:
-//          IDamageable.TakeDamage(AttackDamage), then wait AttackCooldown.
-// - Exit:  give movement and rotation back to the NavMeshAgent.
+// The player is in reach: stop, face them, and attack in swings.
+// Each swing:
+//   1. starts -> AttackSwing event (CreatureAnimation plays the attack animation)
+//   2. AttackWindup seconds later the hit lands: IDamageable.TakeDamage(AttackDamage)
+//      (only if the player is still in reach, so they can dodge by running)
+//   3. the next swing starts AttackCooldown seconds after the previous one started
+// The first swing starts as soon as Attack is entered.
 //
 // The creature never needs to know about the player's health script:
 // it only uses the IDamageable interface from Core (Eliza's PlayerHealth,
@@ -21,7 +23,9 @@ using UnityEngine.AI;
 // ---------------------------------------------------------------------------
 public class AttackState : CreatureState
 {
-    private float attackTimer;
+    private float swingTimer;   // counts down to the next swing
+    private float hitTimer;     // counts down from swing start to the hit
+    private bool hitPending;    // a swing has started and hasn't landed yet
     private IDamageable target;
 
     public AttackState(CreatureController creature) : base(creature) { }
@@ -35,7 +39,8 @@ public class AttackState : CreatureState
         agent.ResetPath();
         agent.updateRotation = false; // we turn the creature towards the player ourselves
 
-        attackTimer = creature.AttackWindup;
+        swingTimer = 0f;              // first swing straight away
+        hitPending = false;
         target = FindDamageable(creature.Senses.Player);
 
         if (target == null)
@@ -56,6 +61,7 @@ public class AttackState : CreatureState
 
         if (playerEscaped)
         {
+            hitPending = false; // a swing that hasn't landed misses
             if (creature.Fsm.CanLeaveState)
             {
                 creature.Fsm.ChangeState(creature.Chase);
@@ -66,11 +72,25 @@ public class AttackState : CreatureState
 
         FacePlayer(senses.Player);
 
-        attackTimer -= Time.deltaTime;
-        if (attackTimer <= 0f)
+        // A swing in progress: land the hit after the wind-up.
+        if (hitPending)
         {
-            Hit();
-            attackTimer = creature.AttackCooldown;
+            hitTimer -= Time.deltaTime;
+            if (hitTimer <= 0f)
+            {
+                hitPending = false;
+                Hit();
+            }
+        }
+
+        // Time for the next swing?
+        swingTimer -= Time.deltaTime;
+        if (swingTimer <= 0f)
+        {
+            swingTimer = creature.AttackCooldown;
+            hitTimer = creature.AttackWindup;
+            hitPending = true;
+            creature.RaiseAttackSwing(); // B9: play the attack animation
         }
     }
 
@@ -79,6 +99,7 @@ public class AttackState : CreatureState
         NavMeshAgent agent = creature.Agent;
         agent.isStopped = false;
         agent.updateRotation = true;
+        hitPending = false;
         target = null;
     }
 

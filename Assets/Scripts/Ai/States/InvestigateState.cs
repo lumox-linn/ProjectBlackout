@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // ---------------------------------------------------------------------------
-// InvestigateState  (B5, min time in state added in B8)
+// InvestigateState  (B5; min time in state B8; IsLookingAround B9)
 //
 // Goes to check a spot, looks around, and gives up if it finds nothing.
 // The spot is set with SetTarget() BEFORE switching to this state:
@@ -11,9 +11,12 @@ using UnityEngine.AI;
 //
 // Two phases:
 //   1. Moving:        walk to the target (investigate speed).
-//   2. Looking around: stop and turn left and right (a smooth sine sweep)
-//                      for LookAroundTime seconds, so the view cone sweeps
-//                      the area. Sight keeps being checked while it turns.
+//   2. Looking around: stop and look RIGHT, then LEFT, then face forward again,
+//                      for LookAroundTime seconds, so the view cone sweeps the
+//                      area. Sight keeps being checked while it turns.
+//                      Each turn is eased (slow-fast-slow) with a short hold at
+//                      each side, so it looks natural and matches the
+//                      LookRight/LookLeft animations (B9).
 //
 // Transitions:
 //   Investigate -> Chase        sees the player
@@ -39,6 +42,65 @@ public class InvestigateState : CreatureState
     public InvestigateState(CreatureController creature) : base(creature) { }
 
     public override string Name => "Investigate";
+
+    // B9: CreatureAnimation plays the look-around animation while this is true.
+    public bool IsLookingAround => isActive && phase == Phase.LookingAround;
+
+    // --- Look-around timeline (fractions of LookAroundTime) ---
+    //   0.00-0.15  turn to the right      (eased)
+    //   0.15-0.40  hold, looking right    (LookRight animation)
+    //   0.40-0.60  turn across to the left (eased)
+    //   0.60-0.85  hold, looking left     (LookLeft animation)
+    //   0.85-1.00  turn back to the front (eased)
+    private const float TurnRightEnd = 0.15f;
+    private const float HoldRightEnd = 0.40f;
+    private const float TurnLeftEnd = 0.60f;
+    private const float HoldLeftEnd = 0.85f;
+
+    // Body yaw at a point in the look-around, from -1 (full left) to +1 (full right).
+    // Mathf.SmoothStep eases in and out, so the creature never starts or stops a turn suddenly.
+    private static float LookCurve(float progress)
+    {
+        if (progress < TurnRightEnd) return Mathf.SmoothStep(0f, 1f, progress / TurnRightEnd);
+        if (progress < HoldRightEnd) return 1f;
+        if (progress < TurnLeftEnd) return Mathf.SmoothStep(1f, -1f, (progress - HoldRightEnd) / (TurnLeftEnd - HoldRightEnd));
+        if (progress < HoldLeftEnd) return -1f;
+        return Mathf.SmoothStep(-1f, 0f, (progress - HoldLeftEnd) / (1f - HoldLeftEnd));
+    }
+
+    private float LookProgress => Mathf.Clamp01(lookTimer / creature.LookAroundTime);
+
+    // B9: which side to look at, for the LookLeft/LookRight animations:
+    // +1 = look right, -1 = look left, 0 = not looking around.
+    // Switches halfway through the turn from right to left.
+    public int LookSide
+    {
+        get
+        {
+            if (!IsLookingAround)
+            {
+                return 0;
+            }
+            return LookProgress < 0.5f ? 1 : -1;
+        }
+    }
+
+    // B9: which way the body is turning right now, from -1 (turning left) to +1 (turning right),
+    // 0 while holding still. Only used by the optional procedural head turn.
+    public float LookTurnDirection
+    {
+        get
+        {
+            if (!IsLookingAround)
+            {
+                return 0f;
+            }
+            const float step = 0.01f;
+            float p = LookProgress;
+            float slope = (LookCurve(Mathf.Min(1f, p + step)) - LookCurve(Mathf.Max(0f, p - step))) / (2f * step);
+            return Mathf.Clamp(slope / 15f, -1f, 1f); // 15 = the fastest slope in the curve
+        }
+    }
 
     // Call before ChangeState(Investigate), or while already investigating
     // to switch to a new target (e.g. a newer noise).
@@ -203,8 +265,8 @@ public class InvestigateState : CreatureState
             return;
         }
 
-        // Sine sweep: 0 -> +angle -> 0 -> -angle -> 0 over the look-around time.
-        float yaw = Mathf.Sin(progress * Mathf.PI * 2f) * creature.LookAroundAngle;
+        // Right, hold, across to the left, hold, back to the front (see LookCurve).
+        float yaw = LookCurve(progress) * creature.LookAroundAngle;
         creature.transform.rotation = lookStartRotation * Quaternion.Euler(0f, yaw, 0f);
     }
 }
