@@ -26,7 +26,7 @@ public class Generator : MonoBehaviour, IInteractable
     private Transform player;
 
     // IInteractable: what the HUD shows and whether it can be used.
-    public string Prompt => "Turn on generator";
+    public string Prompt => "ACTIVATE GENERATOR";
     public bool CanInteract => !isOn;
 
     private void Start()

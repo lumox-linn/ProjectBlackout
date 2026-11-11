@@ -7278,7 +7278,7 @@ MonoBehaviour:
   objectiveId: generator
   noiseRadius: 30
   startSound: {fileID: 8937087689601830201}
-  useOwnInput: 1
+  useOwnInput: 0
   useRange: 2.5
 --- !u!82 &8937087689601830201
 AudioSource:
