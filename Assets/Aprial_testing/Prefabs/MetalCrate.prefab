@@ -169,3 +169,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutImpactNoise
   minimumSpeed: 2
   cooldownSeconds: 0.3
+  minimumStunSpeed: 6
+  stunDuration: 3
+  stunWindowSeconds: 3

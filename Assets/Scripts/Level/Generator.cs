@@ -27,7 +27,7 @@ public class Generator : MonoBehaviour, IInteractable
 
     // IInteractable: what the HUD shows and whether it can be used.
     public string Prompt => "ACTIVATE GENERATOR";
-    public bool CanInteract => !isOn;
+    public bool CanInteract => !isOn && (!needsPowerCell || hasPowerCell);
 
     private void Start()
     {
@@ -49,7 +49,7 @@ public class Generator : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (isOn) return;
+        if (!CanInteract) return;
         isOn = true;
 
         if (exitDoor != null) exitDoor.Open();
@@ -62,5 +62,16 @@ public class Generator : MonoBehaviour, IInteractable
             ObjectiveManager.Instance.Complete(objectiveId);
 
         Debug.Log("[Generator] ON: exit door opening");
+    }
+
+    [Header("Power cell")]
+    [SerializeField] private bool needsPowerCell = true;
+    private bool hasPowerCell;
+
+    /// <summary>Called by the PowerSocket when the cell is dropped in.</summary>
+    public void InsertPowerCell()
+    {
+        hasPowerCell = true;
+        Debug.Log("[Generator] Power cell inserted");
     }
 }
