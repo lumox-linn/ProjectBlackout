@@ -27,6 +27,8 @@ namespace ProjectBlackout.PlayerTest
         private GameObject settingsPanel;
         private GameObject winPanel;
         private GameObject losePanel;
+        private GameObject howToPlayPanel;
+        private bool showingInstructions;
 
         private bool settingsOpen;
         private bool initialized;
@@ -113,6 +115,7 @@ namespace ProjectBlackout.PlayerTest
             settingsPanel = FindPanel(root, "SettingsPanel");
             winPanel = FindPanel(root, "WinPanel");
             losePanel = FindPanel(root, "LosePanel");
+            howToPlayPanel = FindPanel(root, "HowToPlayPanel");
 
             if (mainMenuPanel == null ||
                 hudPanel == null ||
@@ -136,6 +139,8 @@ namespace ProjectBlackout.PlayerTest
             WirePanelButtons(settingsPanel);
             WirePanelButtons(winPanel);
             WirePanelButtons(losePanel);
+            if (howToPlayPanel != null)
+                WirePanelButtons(howToPlayPanel);
 
             initialized = true;
             settingsOpen = false;
@@ -183,6 +188,13 @@ namespace ProjectBlackout.PlayerTest
 
                 switch (name)
                 {
+                    case "howtoplaybutton":
+                        action = OpenHowToPlay;
+                        break;
+                    case "continuebutton":
+                    case "continue":
+                        action = CloseHowToPlay;
+                        break;
                     case "playbutton":
                     case "play":
                     case "startbutton":
@@ -258,9 +270,14 @@ namespace ProjectBlackout.PlayerTest
             }
 #endif
 
-            if (settingsOpen && EscapePressed())
+            if (EscapePressed())
             {
-                CloseSettings();
+                if (settingsOpen)
+                    CloseSettings();
+                else if (gameManager.CurrentState == GameState.Playing)
+                    gameManager.PauseGame();
+                else if (gameManager.CurrentState == GameState.Paused)
+                    gameManager.ResumeGame();
             }
         }
 
@@ -326,8 +343,16 @@ namespace ProjectBlackout.PlayerTest
             );
 
             pausePanel.SetActive(
-                !settingsOpen && state == GameState.Paused
+                !settingsOpen && !showingInstructions &&
+                state == GameState.Paused
             );
+            if (howToPlayPanel != null)
+            {
+                howToPlayPanel.SetActive(showingInstructions);
+
+                if (showingInstructions)
+                    howToPlayPanel.transform.SetAsLastSibling();
+            }
 
             settingsPanel.SetActive(settingsOpen);
 
@@ -376,10 +401,36 @@ namespace ProjectBlackout.PlayerTest
                 return;
             }
 
-            settingsOpen = false;
-            gameManager.SetGameState(GameState.Playing);
-        }
+            bool startingRun = gameManager.CurrentState == GameState.Menu;
 
+            settingsOpen = false;
+            showingInstructions = startingRun && howToPlayPanel != null;
+
+            gameManager.SetGameState(
+                showingInstructions ? GameState.Paused : GameState.Playing
+            );
+        }
+        public void OpenHowToPlay()
+        {
+            if (howToPlayPanel == null)
+                return;
+
+            settingsOpen = false;
+            showingInstructions = true;
+            RefreshPanels();
+        }
+        public void CloseHowToPlay()
+        {
+            if (!showingInstructions)
+                return;
+
+            showingInstructions = false;
+
+            if (gameManager.CurrentState == GameState.Menu)
+                RefreshPanels();
+            else
+                gameManager.ResumeGame();
+        }
         public void ResumePlaying()
         {
             if (gameManager.CurrentState == GameState.Paused)

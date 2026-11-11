@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -12,8 +11,10 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject howToPlayPanel;
 
     private GameState currentState = GameState.Menu;
+    private bool showingInstructions;
 
     private void OnEnable()
     {
@@ -27,102 +28,128 @@ public class GameUIManager : MonoBehaviour
 
     private void Start()
     {
-        ShowGameState(GameState.Menu);
+        ShowGameState(GameManager.Instance.CurrentState);
     }
-
-    public void RestartGame()
-    {
-        Time.timeScale = 1f;
-
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
-    }
-
-
 
     private void Update()
     {
         if (Keyboard.current == null)
             return;
 
-        // ESC - Pause / Resume
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (settingsPanel.activeSelf)
-            {
+            if (showingInstructions)
+                CloseHowToPlay();
+            else if (settingsPanel.activeSelf)
                 CloseSettings();
-            }
             else if (currentState == GameState.Playing)
-            {
                 PauseGame();
-            }
             else if (currentState == GameState.Paused)
-            {
                 ResumeGame();
-            }
         }
 
-        // TEMPORARY WIN TEST
         if (Keyboard.current.f9Key.wasPressedThisFrame)
-        {
-            Debug.Log("F9 detected - WIN");
-            GameEvents.RaiseGameStateChanged(GameState.Won);
-        }
+            GameManager.Instance.WinGame();
 
-        // TEMPORARY LOSE TEST
         if (Keyboard.current.f10Key.wasPressedThisFrame)
-        {
-            Debug.Log("F10 detected - LOSE");
-            GameEvents.RaiseGameStateChanged(GameState.Lost);
-        }
+            GameManager.Instance.LoseGame();
     }
-
 
     private void ShowGameState(GameState state)
     {
         currentState = state;
 
-        Time.timeScale = state == GameState.Paused ? 0f : 1f;
+        if (state != GameState.Paused)
+            showingInstructions = false;
 
         mainMenuPanel.SetActive(state == GameState.Menu);
-        hudPanel.SetActive(state == GameState.Playing ||
-                           state == GameState.Paused);
-        pausePanel.SetActive(state == GameState.Paused);
+        hudPanel.SetActive(
+            state == GameState.Playing || state == GameState.Paused
+        );
+
+        pausePanel.SetActive(
+            state == GameState.Paused && !showingInstructions
+        );
+
         winPanel.SetActive(state == GameState.Won);
         losePanel.SetActive(state == GameState.Lost);
-
         settingsPanel.SetActive(false);
 
+        if (howToPlayPanel != null)
+        {
+            howToPlayPanel.SetActive(showingInstructions);
+
+            if (showingInstructions)
+                howToPlayPanel.transform.SetAsLastSibling();
+        }
+
         bool playing = state == GameState.Playing;
-        Cursor.lockState = playing ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.lockState =
+            playing ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !playing;
     }
 
     public void PlayGame()
     {
-        GameEvents.RaiseGameStateChanged(GameState.Playing);
+        Debug.Log(
+            $"[UI Start] Object={name}, " +
+            $"Enabled={enabled}, Active={gameObject.activeInHierarchy}, " +
+            $"InstructionsAssigned={howToPlayPanel != null}"
+        );
+
+        GameManager.Instance.StartGame();
+
+        Debug.Log(
+            $"[UI Start] UI state={currentState}, " +
+            $"Manager state={GameManager.Instance.CurrentState}"
+        );
+
+        OpenHowToPlay();
+
+        Debug.Log(
+            $"[UI Start] Instructions={showingInstructions}, " +
+            $"PanelVisible={howToPlayPanel != null && howToPlayPanel.activeInHierarchy}"
+        );
+    }
+
+    public void OpenHowToPlay()
+    {
+        if (currentState != GameState.Playing || howToPlayPanel == null)
+            return;
+
+        showingInstructions = true;
+        GameManager.Instance.PauseGame();
+    }
+
+    public void CloseHowToPlay()
+    {
+        if (!showingInstructions)
+            return;
+
+        showingInstructions = false;
+        GameManager.Instance.ResumeGame();
     }
 
     public void PauseGame()
     {
-        if (currentState == GameState.Playing)
-        {
-            GameEvents.RaiseGameStateChanged(GameState.Paused);
-        }
+        GameManager.Instance.PauseGame();
     }
 
     public void ResumeGame()
     {
-        if (currentState == GameState.Paused)
-        {
-            GameEvents.RaiseGameStateChanged(GameState.Playing);
-        }
+        showingInstructions = false;
+        GameManager.Instance.ResumeGame();
+    }
+
+    public void RestartGame()
+    {
+        GameManager.Instance.RestartGame();
     }
 
     public void ReturnToMainMenu()
     {
-        GameEvents.RaiseGameStateChanged(GameState.Menu);
+        showingInstructions = false;
+        GameManager.Instance.SetGameState(GameState.Menu);
     }
 
     public void OpenSettings()
@@ -134,13 +161,11 @@ public class GameUIManager : MonoBehaviour
 
     public void CloseSettings()
     {
-        settingsPanel.SetActive(false);
         ShowGameState(currentState);
     }
 
     public void QuitGame()
     {
-        Debug.Log("Quit button clicked!");
-        Application.Quit();
+        GameManager.Instance.QuitGame();
     }
 }

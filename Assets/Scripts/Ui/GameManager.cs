@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
         SetGameState(GameState.Menu);
     }
 
+    /* 
+    esc handled by game ui mgr instead test
     private void Update()
     {
         if (Keyboard.current == null)
@@ -42,6 +44,7 @@ public class GameManager : MonoBehaviour
                 ResumeGame();
         }
     }
+    */
 
     public void SetGameState(GameState newState)
     {
