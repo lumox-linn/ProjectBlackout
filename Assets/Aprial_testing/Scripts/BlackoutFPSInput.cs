@@ -14,6 +14,21 @@ namespace ProjectBlackout.PlayerTest
         [Min(0.1f)] public float sprintSpeed = 6.2f;
         public float gravity = -18f;
 
+        [Header("Hit Speed Boost (like Dead by Daylight)")]
+        [Tooltip("Speed multiplier right after being hit.")]
+        [Min(1f)] public float hitBoostMultiplier = 1.5f;
+        [Tooltip("How long the boost lasts, in seconds.")]
+        [Min(0f)] public float hitBoostDuration = 2f;
+
+        /// <summary>True while the after-hit speed boost is active.</summary>
+        public bool IsBoosted => boostTimeLeft > 0f;
+        /// <summary>0..1 how much boost is left (1 = just got hit).</summary>
+        public float BoostAmount => hitBoostDuration > 0f ? Mathf.Clamp01(boostTimeLeft / hitBoostDuration) : 0f;
+        public event System.Action BoostStarted;
+
+        private BlackoutPlayerHealth health;
+        private float boostTimeLeft;
+
         [Header("Optional: OFF for the initial Blackout prototype")]
         public bool allowJump = false;
         [Min(0.1f)] public float jumpHeight = 1.1f;
@@ -24,6 +39,24 @@ namespace ProjectBlackout.PlayerTest
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
+            health = GetComponent<BlackoutPlayerHealth>();
+        }
+
+        private void OnEnable()
+        {
+            if (health != null) health.Damaged += StartHitBoost;
+        }
+
+        private void OnDisable()
+        {
+            if (health != null) health.Damaged -= StartHitBoost;
+        }
+
+        /// <summary>Starts the after-hit sprint. Also callable from other scripts or for testing.</summary>
+        public void StartHitBoost()
+        {
+            boostTimeLeft = hitBoostDuration;
+            BoostStarted?.Invoke();
         }
 
         private void Update()
@@ -36,6 +69,15 @@ namespace ProjectBlackout.PlayerTest
             Vector3 horizontal = new Vector3(input.x, 0f, input.y);
             horizontal = Vector3.ClampMagnitude(horizontal, 1f);
             float speed = IsSprinting() ? sprintSpeed : walkSpeed;
+
+            // After-hit boost: always at least sprint speed, then multiplied. Fades out over the last 30%.
+            if (boostTimeLeft > 0f)
+            {
+                boostTimeLeft -= Time.deltaTime;
+                float fade = Mathf.Clamp01(BoostAmount / 0.3f);
+                float boosted = Mathf.Max(speed, sprintSpeed) * hitBoostMultiplier;
+                speed = Mathf.Lerp(speed, boosted, fade);
+            }
 
             if (controller.isGrounded && verticalSpeed < 0f)
                 verticalSpeed = -2f;

@@ -60,6 +60,10 @@ namespace ProjectBlackout.PlayerTest
         private float chargedSeconds;
 
         public BlackoutMagneticObject HeldObject => held;
+        public bool IsHolding => held != null;
+
+        /// <summary>Raised when a held object is thrown. Argument: charge 0..1 (used by the glove viewmodel).</summary>
+        public event System.Action<float> Thrown;
         public float HoldDistance => holdDistance;
         public bool HasGlove => hasGlove;
         public bool IsCharging => isCharging;
@@ -356,6 +360,8 @@ namespace ProjectBlackout.PlayerTest
                         CurrentThrowImpulse,
                         ForceMode.Impulse
                     );
+
+                    Thrown?.Invoke(Charge01);
                 }
             }
 

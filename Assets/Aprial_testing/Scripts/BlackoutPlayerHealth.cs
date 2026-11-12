@@ -14,7 +14,16 @@ namespace ProjectBlackout.PlayerTest
         [Tooltip("Only for testing without a creature in PlayerTest scene")]
         public bool debugDamageWithH = true;
 
+        [Header("Hit Feedback")]
+        [Tooltip("Seconds after a hit where the player can't be hurt again (gives time to run).")]
+        [Min(0f)] public float invulnerableAfterHit = 1.0f;
+
         public int CurrentHealth { get; private set; }
+        public bool IsInvulnerable => Time.time < invulnerableUntil;
+        private float invulnerableUntil;
+
+        /// <summary>Raised when the player takes damage but is still alive (used for the speed boost).</summary>
+        public event System.Action Damaged;
         public bool IsDead => CurrentHealth <= 0;
 
         public event System.Action<int, int> HealthChanged;
@@ -45,7 +54,7 @@ namespace ProjectBlackout.PlayerTest
 
         public void TakeDamage(int amount)
         {
-            if (amount <= 0 || IsDead)
+            if (amount <= 0 || IsDead || IsInvulnerable)
                 return;
 
             CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
@@ -54,12 +63,20 @@ namespace ProjectBlackout.PlayerTest
             GameEvents.RaiseHealthChanged(CurrentHealth, maxHealth);
 
             if (IsDead)
+            {
                 Died?.Invoke();
+            }
+            else
+            {
+                invulnerableUntil = Time.time + invulnerableAfterHit;
+                Damaged?.Invoke();
+            }
         }
 
         public void ResetHealth()
         {
             CurrentHealth = maxHealth;
+            invulnerableUntil = 0f;
 
             HealthChanged?.Invoke(CurrentHealth, maxHealth);
             GameEvents.RaiseHealthChanged(CurrentHealth, maxHealth);
