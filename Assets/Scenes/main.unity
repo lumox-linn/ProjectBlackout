@@ -1194,6 +1194,10 @@ PrefabInstance:
       propertyPath: m_RenderPostProcessing
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5112904459458163493, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.174
+      objectReference: {fileID: 0}
     - target: {fileID: 5350198956494868396, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
       propertyPath: inputMode
       value: 1
