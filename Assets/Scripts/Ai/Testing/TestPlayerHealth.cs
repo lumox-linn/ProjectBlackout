@@ -1,52 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-// ---------------------------------------------------------------------------
-// TestPlayerHealth  (B6 test helper, TEMPORARY)
-//
-// A stand-in for Eliza's real PlayerHealth (C9), so the creature's Attack can
-// be tested on the PlayerStandIn capsule. It implements the shared
-// IDamageable interface from Core, exactly like the real one will.
-// Put it on PlayerStandIn. Remove it once the real player is merged.
-//
-// At 0 health it freezes the game (Time.timeScale = 0), the same way the
-// real GameManager does on LOSE, so the creature stops attacking.
-// ---------------------------------------------------------------------------
+// test helper: a stand-in for the real PlayerHealth, so the creature's Attack can be tested on the PlayerStandIn
+// (it implements IDamageable from Core, like the real one; at 0 health it freezes the game like LOSE does)
 public class TestPlayerHealth : MonoBehaviour, IDamageable
 {
+    // health at the start
     [SerializeField] private int maxHealth = 3;
-
-    [Tooltip("Read-only during Play: the current health.")]
+    // the current health (shown in the Inspector during Play)
     [SerializeField] private int currentHealth;
 
-    private void Awake()
+    void Awake()
     {
         currentHealth = maxHealth;
     }
 
+    // called by the creature's attack
     public void TakeDamage(int amount)
     {
+        // already "dead"
         if (currentHealth <= 0)
         {
-            return; // already "dead"
+            return;
         }
 
         currentHealth = Mathf.Max(0, currentHealth - amount);
-        Debug.Log($"[TestPlayerHealth] Ouch! Health {currentHealth}/{maxHealth}", this);
+        Debug.Log("[TestPlayerHealth] Ouch! Health " + currentHealth + "/" + maxHealth, this);
 
+        // like GameManager.LoseGame(): everything stops
         if (currentHealth == 0)
         {
-            Debug.Log("[TestPlayerHealth] Player is dead: LOSE. Game frozen " +
-                      "(right-click this component > Reset Health to carry on).", this);
-            Time.timeScale = 0f; // like GameManager.LoseGame(): everything stops
+            Debug.Log("[TestPlayerHealth] Player is dead: LOSE. Game frozen (right-click this component > Reset Health to carry on).", this);
+            Time.timeScale = 0.0f;
         }
     }
 
-    // Right-click the component header > "Reset Health" to test again without restarting.
+    // right-click this component > "Reset Health" to test again without restarting
     [ContextMenu("Reset Health")]
     private void ResetHealth()
     {
         currentHealth = maxHealth;
-        Time.timeScale = 1f; // unfreeze
-        Debug.Log($"[TestPlayerHealth] Health reset to {maxHealth}.", this);
+        Time.timeScale = 1.0f;
+        Debug.Log("[TestPlayerHealth] Health reset to " + maxHealth + ".", this);
     }
 }

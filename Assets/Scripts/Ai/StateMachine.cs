@@ -1,114 +1,123 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-// ---------------------------------------------------------------------------
-// StateMachine  (Task B2, minimum time in state added in B8)
-//
-// A small, reusable finite state machine (FSM).
-// - Holds exactly ONE current state.
-// - Tick() runs the current state's Tick() every frame.
-// - ChangeState() switches safely: old.Exit() -> new.Enter().
-// - Tracks how long we've been in the current state (TimeInState).
-// - B8: MinTimeInState + CanLeaveState. Normal (sense-based) transitions
-//   only happen once the creature has been in its state for at least
-//   MinTimeInState seconds, so it can't flicker between two states when a
-//   sense result changes back and forth. Forced changes (a stun, debug keys,
-//   timers that have finished) still use ChangeState() directly.
-//
-// It's a plain C# class, NOT a MonoBehaviour: it doesn't need to be on a
-// GameObject. CreatureController creates it with "new" and calls Tick() from
-// its own Update().
-//
-// Pattern reference (the "State" design pattern):
-//   Nystrom, R. (2014) Game Programming Patterns, chapter "State".
-//   https://gameprogrammingpatterns.com/state.html
-// ---------------------------------------------------------------------------
+// a small finite state machine (FSM) that holds one current state and switches between states
+// (plain C# class, not a MonoBehaviour: CreatureController creates it and calls Tick() from its Update)
+// pattern reference: Nystrom, R. (2014) Game Programming Patterns, chapter "State"
+// https://gameprogrammingpatterns.com/state.html
 public class StateMachine
 {
-    // The object that owns this FSM (the creature). Used in log messages, and
-    // clicking a log in the Console highlights this object in the Hierarchy.
-    private readonly Object owner;
+    // write every state change to the Console
+    public bool logChanges = true;
+    // minimum seconds in a state before a sense-based transition is allowed (stops flickering)
+    public float minTimeInState = 0.0f;
 
-    public IState CurrentState { get; private set; }
-    public IState PreviousState { get; private set; }
+    // the creature that owns this state machine (clicking a log highlights it in the Hierarchy)
+    private Object owner;
+    // the state that is running now, and the one before it
+    private IState currentState;
+    private IState previousState;
+    // seconds spent in the current state (reset to 0 on every change)
+    private float timeInState = 0.0f;
 
-    // Seconds spent in the current state. Reset to 0 on every change.
-    public float TimeInState { get; private set; }
-
-    // When true, every state change is written to the Console.
-    public bool LogChanges { get; set; }
-
-    // Minimum seconds in a state before a normal transition is allowed (B8).
-    public float MinTimeInState { get; set; }
-
-    // True once the current state has lasted at least MinTimeInState.
-    public bool CanLeaveState => TimeInState >= MinTimeInState;
-
-    // Other scripts can listen for state changes (old state, new state).
-    // Example use later: play a growl sound when entering Chase.
+    // lets other scripts listen for state changes (old state, new state)
     public event System.Action<IState, IState> StateChanged;
 
-    public StateMachine(Object owner, bool logChanges = true, float minTimeInState = 0f)
+    // lets other scripts read the states and the time (but not change them)
+    public IState CurrentState
     {
-        this.owner = owner;
-        LogChanges = logChanges;
-        MinTimeInState = minTimeInState;
+        get { return currentState; }
     }
 
+    public IState PreviousState
+    {
+        get { return previousState; }
+    }
+
+    public float TimeInState
+    {
+        get { return timeInState; }
+    }
+
+    // true once the current state has lasted at least minTimeInState
+    // (sense-based transitions check this; stuns, debug keys and finished timers do not)
+    public bool CanLeaveState
+    {
+        get { return timeInState >= minTimeInState; }
+    }
+
+    // creates the state machine for a creature
+    public StateMachine(Object owner, bool logChanges, float minTimeInState)
+    {
+        this.owner = owner;
+        this.logChanges = logChanges;
+        this.minTimeInState = minTimeInState;
+    }
+
+    // switches to a new state: old state Exit() -> new state Enter()
     public void ChangeState(IState newState)
     {
+        // nothing to switch to
         if (newState == null)
         {
-            Debug.LogWarning($"[FSM] {owner.name}: tried to change to a null state.", owner);
+            Debug.LogWarning("[FSM] " + owner.name + ": tried to change to a null state.", owner);
             return;
         }
 
-        // Already in this state: do nothing (no Exit/Enter, no log).
-        if (newState == CurrentState)
+        // already in this state: do nothing (no Exit/Enter, no log)
+        if (newState == currentState)
         {
             return;
         }
 
-        IState oldState = CurrentState;
+        IState oldState = currentState;
 
-        // 1) Let the old state clean up.
+        // 1) let the old state clean up
         if (oldState != null)
         {
             oldState.Exit();
         }
 
-        if (LogChanges)
+        // log the change
+        if (logChanges)
         {
             if (oldState == null)
             {
-                Debug.Log($"[FSM] {owner.name}: enter {newState.Name}", owner);
+                Debug.Log("[FSM] " + owner.name + ": enter " + newState.Name, owner);
             }
             else
             {
-                Debug.Log($"[FSM] {owner.name}: exit {oldState.Name} ({TimeInState:F1} s) -> enter {newState.Name}", owner);
+                Debug.Log("[FSM] " + owner.name + ": exit " + oldState.Name + " (" + timeInState.ToString("0.0") + " s) -> enter " + newState.Name, owner);
             }
         }
 
-        // 2) Switch.
-        PreviousState = oldState;
-        CurrentState = newState;
-        TimeInState = 0f;
+        // 2) switch
+        previousState = oldState;
+        currentState = newState;
+        timeInState = 0.0f;
 
-        // 3) Let the new state set itself up.
-        CurrentState.Enter();
+        // 3) let the new state set itself up
+        currentState.Enter();
 
-        // 4) Tell anyone who's listening.
-        StateChanged?.Invoke(oldState, newState);
+        // 4) tell anyone who is listening
+        if (StateChanged != null)
+        {
+            StateChanged(oldState, newState);
+        }
     }
 
-    // Call this once per frame (CreatureController does it in Update).
+    // called once per frame by CreatureController
     public void Tick()
     {
-        if (CurrentState == null)
+        // no state yet
+        if (currentState == null)
         {
             return;
         }
 
-        TimeInState += Time.deltaTime;
-        CurrentState.Tick();
+        // count the time in this state and run it
+        timeInState += Time.deltaTime;
+        currentState.Tick();
     }
 }
