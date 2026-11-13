@@ -1,78 +1,74 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-// ---------------------------------------------------------------------------
-// InvestigateState  (B5; min time in state B8; IsLookingAround B9)
-//
-// Goes to check a spot, looks around, and gives up if it finds nothing.
-// The spot is set with SetTarget() BEFORE switching to this state:
-//   - Patrol: the position of a noise it heard
-//   - Chase:  the player's last seen position
-//
-// Two phases:
-//   1. Moving:        walk to the target (investigate speed).
-//   2. Looking around: stop and look RIGHT, then LEFT, then face forward again,
-//                      for LookAroundTime seconds, so the view cone sweeps the
-//                      area. Sight keeps being checked while it turns.
-//                      Each turn is eased (slow-fast-slow) with a short hold at
-//                      each side, so it looks natural and matches the
-//                      LookRight/LookLeft animations (B9).
-//
-// Transitions:
-//   Investigate -> Chase        sees the player
-//   Investigate -> Investigate  hears a newer noise (new target, starts again)
-//   Investigate -> Patrol       finished looking around without seeing the player
-// Investigate -> Chase waits for the minimum time in state (B8).
-// ---------------------------------------------------------------------------
+// goes to check a spot, looks right and left, and gives up if it finds nothing
+// the spot is set with SetTarget() before switching here: a noise (from Patrol),
+// the last seen position (from Chase) or where the player was when it got stunned
+// Investigate -> Chase when it sees the player
+// Investigate -> Investigate when it hears a newer noise (new target)
+// Investigate -> Patrol when it has finished looking around without seeing the player
 public class InvestigateState : CreatureState
 {
-    private const float ArriveTolerance = 0.3f;
-    private const float StuckSpeed = 0.1f;
-
-    private enum Phase { Moving, LookingAround }
-
-    private Vector3 target;
-    private bool hasTarget;
-    private bool isActive;           // true between Enter and Exit
-    private Phase phase;
-    private float lookTimer;
-    private float stuckTimer;
-    private Quaternion lookStartRotation;
-
-    public InvestigateState(CreatureController creature) : base(creature) { }
-
-    public override string Name => "Investigate";
-
-    // B9: CreatureAnimation plays the look-around animation while this is true.
-    public bool IsLookingAround => isActive && phase == Phase.LookingAround;
-
-    // --- Look-around timeline (fractions of LookAroundTime) ---
-    //   0.00-0.15  turn to the right      (eased)
-    //   0.15-0.40  hold, looking right    (LookRight animation)
-    //   0.40-0.60  turn across to the left (eased)
-    //   0.60-0.85  hold, looking left     (LookLeft animation)
-    //   0.85-1.00  turn back to the front (eased)
-    private const float TurnRightEnd = 0.15f;
-    private const float HoldRightEnd = 0.40f;
-    private const float TurnLeftEnd = 0.60f;
-    private const float HoldLeftEnd = 0.85f;
-
-    // Body yaw at a point in the look-around, from -1 (full left) to +1 (full right).
-    // Mathf.SmoothStep eases in and out, so the creature never starts or stops a turn suddenly.
-    private static float LookCurve(float progress)
+    // the two parts of investigating
+    private enum Phase
     {
-        if (progress < TurnRightEnd) return Mathf.SmoothStep(0f, 1f, progress / TurnRightEnd);
-        if (progress < HoldRightEnd) return 1f;
-        if (progress < TurnLeftEnd) return Mathf.SmoothStep(1f, -1f, (progress - HoldRightEnd) / (TurnLeftEnd - HoldRightEnd));
-        if (progress < HoldLeftEnd) return -1f;
-        return Mathf.SmoothStep(-1f, 0f, (progress - HoldLeftEnd) / (1f - HoldLeftEnd));
+        Moving,
+        LookingAround
     }
 
-    private float LookProgress => Mathf.Clamp01(lookTimer / creature.LookAroundTime);
+    // how close (beyond the agent's Stopping Distance) counts as "arrived"
+    private const float arriveTolerance = 0.3f;
+    // slower than this (m/s) counts as "not moving"
+    private const float stuckSpeed = 0.1f;
 
-    // B9: which side to look at, for the LookLeft/LookRight animations:
-    // +1 = look right, -1 = look left, 0 = not looking around.
-    // Switches halfway through the turn from right to left.
+    // the look-around timeline (fractions of lookAroundTime):
+    // 0.00-0.15 turn right, 0.15-0.40 hold looking right, 0.40-0.60 turn across to the left,
+    // 0.60-0.85 hold looking left, 0.85-1.00 turn back to the front
+    private const float turnRightEnd = 0.15f;
+    private const float holdRightEnd = 0.40f;
+    private const float turnLeftEnd = 0.60f;
+    private const float holdLeftEnd = 0.85f;
+
+    // the spot to check
+    private Vector3 target;
+    // whether a spot has been given
+    private bool hasTarget = false;
+    // true between Enter and Exit
+    private bool isActive = false;
+    // moving or looking around
+    private Phase phase = Phase.Moving;
+    // time spent looking around
+    private float lookTimer = 0.0f;
+    // seconds spent not moving on the way
+    private float stuckTimer = 0.0f;
+    // the rotation when looking around started
+    private Quaternion lookStartRotation;
+
+    public InvestigateState(CreatureController creature) : base(creature)
+    {
+    }
+
+    public override string Name
+    {
+        get { return "Investigate"; }
+    }
+
+    // true while looking around (CreatureAnimation uses it)
+    public bool IsLookingAround
+    {
+        get { return isActive && phase == Phase.LookingAround; }
+    }
+
+    // how far through the look-around we are (0 to 1)
+    private float LookProgress
+    {
+        get { return Mathf.Clamp01(lookTimer / creature.lookAroundTime); }
+    }
+
+    // which side to look at for the LookLeft/LookRight animations
+    // (+1 = look right, -1 = look left, 0 = not looking around; switches halfway through the turn)
     public int LookSide
     {
         get
@@ -81,39 +77,46 @@ public class InvestigateState : CreatureState
             {
                 return 0;
             }
-            return LookProgress < 0.5f ? 1 : -1;
+
+            if (LookProgress < 0.5f)
+            {
+                return 1;
+            }
+            return -1;
         }
     }
 
-    // B9: which way the body is turning right now, from -1 (turning left) to +1 (turning right),
-    // 0 while holding still. Only used by the optional procedural head turn.
+    // which way the body is turning right now (-1 = left, +1 = right, 0 = holding still)
+    // only used by the optional procedural head turn in CreatureAnimation
     public float LookTurnDirection
     {
         get
         {
             if (!IsLookingAround)
             {
-                return 0f;
+                return 0.0f;
             }
-            const float step = 0.01f;
-            float p = LookProgress;
-            float slope = (LookCurve(Mathf.Min(1f, p + step)) - LookCurve(Mathf.Max(0f, p - step))) / (2f * step);
-            return Mathf.Clamp(slope / 15f, -1f, 1f); // 15 = the fastest slope in the curve
+
+            // how fast the curve is changing here (15 = the fastest slope in the curve)
+            float step = 0.01f;
+            float progress = LookProgress;
+            float slope = (LookCurve(Mathf.Min(1.0f, progress + step)) - LookCurve(Mathf.Max(0.0f, progress - step))) / (2.0f * step);
+            return Mathf.Clamp(slope / 15.0f, -1.0f, 1.0f);
         }
     }
 
-    // Call before ChangeState(Investigate), or while already investigating
-    // to switch to a new target (e.g. a newer noise).
+    // called before ChangeState(Investigate), or while already investigating to switch to a new spot
     public void SetTarget(Vector3 position, string reason)
     {
         target = position;
         hasTarget = true;
 
-        if (creature.LogStateDetails)
+        if (creature.logStateDetails)
         {
-            Debug.Log($"[Investigate] Going to check the {reason}.", creature);
+            Debug.Log("[Investigate] Going to check the " + reason + ".", creature);
         }
 
+        // already investigating: go to the new spot straight away
         if (isActive)
         {
             StartMoving();
@@ -124,13 +127,17 @@ public class InvestigateState : CreatureState
     {
         isActive = true;
 
-        // No target given (e.g. forced with debug key 2): use the last seen
-        // position if there is one, otherwise just look around right here.
+        // no spot given (e.g. debug key 2): use the last seen position, or look around right here
         if (!hasTarget)
         {
-            target = creature.Senses.HasSeenPlayer
-                ? creature.Senses.LastSeenPlayerPosition
-                : creature.transform.position;
+            if (creature.Senses.HasSeenPlayer)
+            {
+                target = creature.Senses.LastSeenPlayerPosition;
+            }
+            else
+            {
+                target = creature.transform.position;
+            }
             hasTarget = true;
         }
 
@@ -139,20 +146,22 @@ public class InvestigateState : CreatureState
 
     public override void Tick()
     {
-        // Transition: Investigate -> Chase.
+        // Investigate -> Chase when the creature sees the player
         if (creature.Fsm.CanLeaveState && creature.Senses.CanSeePlayer)
         {
             creature.Fsm.ChangeState(creature.Chase);
             return;
         }
 
-        // Transition: Investigate -> Investigate (newer noise = new target).
-        if (creature.Senses.TryConsumeNoise(out Vector3 noisePosition))
+        // Investigate -> Investigate when it hears a newer noise
+        Vector3 noisePosition;
+        if (creature.Senses.TryConsumeNoise(out noisePosition))
         {
             SetTarget(noisePosition, "new noise");
             return;
         }
 
+        // walk there, or look around
         if (phase == Phase.Moving)
         {
             TickMoving();
@@ -168,96 +177,99 @@ public class InvestigateState : CreatureState
         isActive = false;
         hasTarget = false;
 
-        // Give rotation back to the NavMeshAgent and let it move again.
+        // give rotation back to the agent and let it move again
         NavMeshAgent agent = creature.Agent;
         agent.updateRotation = true;
         agent.isStopped = false;
     }
 
-    // --- Phase 1: walking to the target ---
-
+    // phase 1: start walking to the spot
     private void StartMoving()
     {
         NavMeshAgent agent = creature.Agent;
         agent.updateRotation = true;
         agent.isStopped = false;
-        agent.speed = creature.InvestigateSpeed;
+        agent.speed = creature.investigateSpeed;
 
         phase = Phase.Moving;
-        stuckTimer = 0f;
+        stuckTimer = 0.0f;
 
+        // the spot is not near the NavMesh: just look around where we are
         if (!agent.SetDestination(target))
         {
-            // Target isn't near the NavMesh: just look around where we are.
             StartLookingAround();
         }
     }
 
+    // phase 1: walking to the spot
     private void TickMoving()
     {
         NavMeshAgent agent = creature.Agent;
 
+        // Unity is still calculating the path
         if (agent.pathPending)
         {
             return;
         }
 
-        // Can't get there at all: look around from here instead.
+        // can't get there at all: look around from here instead
         if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
             StartLookingAround();
             return;
         }
 
-        // Arrived (or as close as a closed door allows: PathPartial ends at the door).
-        if (agent.remainingDistance <= agent.stoppingDistance + ArriveTolerance)
+        // arrived (or as close as a closed door allows)
+        if (agent.remainingDistance <= agent.stoppingDistance + arriveTolerance)
         {
             StartLookingAround();
             return;
         }
 
-        // Stuck on the way: look around from here.
-        if (agent.velocity.magnitude < StuckSpeed)
+        // stuck on the way: look around from here
+        if (agent.velocity.magnitude < stuckSpeed)
         {
             stuckTimer += Time.deltaTime;
-            if (stuckTimer >= creature.StuckTimeout)
+            if (stuckTimer >= creature.stuckTimeout)
             {
                 StartLookingAround();
             }
         }
         else
         {
-            stuckTimer = 0f;
+            stuckTimer = 0.0f;
         }
     }
 
-    // --- Phase 2: looking around ---
-
+    // phase 2: stop and start looking around
     private void StartLookingAround()
     {
+        // stop moving and turn the creature ourselves
         NavMeshAgent agent = creature.Agent;
         agent.isStopped = true;
         agent.ResetPath();
-        agent.updateRotation = false; // we turn the creature ourselves now
+        agent.updateRotation = false;
 
         phase = Phase.LookingAround;
-        lookTimer = 0f;
+        lookTimer = 0.0f;
         lookStartRotation = creature.transform.rotation;
 
-        if (creature.LogStateDetails)
+        if (creature.logStateDetails)
         {
             Debug.Log("[Investigate] Looking around...", creature);
         }
     }
 
+    // phase 2: turning right, then left, then back to the front
     private void TickLookingAround()
     {
         lookTimer += Time.deltaTime;
-        float progress = lookTimer / creature.LookAroundTime; // 0 -> 1
+        float progress = lookTimer / creature.lookAroundTime;
 
-        if (progress >= 1f)
+        // Investigate -> Patrol when it has finished looking around
+        if (progress >= 1.0f)
         {
-            if (creature.LogStateDetails)
+            if (creature.logStateDetails)
             {
                 Debug.Log("[Investigate] Found nothing. Back to patrol.", creature);
             }
@@ -265,8 +277,31 @@ public class InvestigateState : CreatureState
             return;
         }
 
-        // Right, hold, across to the left, hold, back to the front (see LookCurve).
-        float yaw = LookCurve(progress) * creature.LookAroundAngle;
-        creature.transform.rotation = lookStartRotation * Quaternion.Euler(0f, yaw, 0f);
+        // turn the body along the look-around curve
+        float yaw = LookCurve(progress) * creature.lookAroundAngle;
+        creature.transform.rotation = lookStartRotation * Quaternion.Euler(0.0f, yaw, 0.0f);
+    }
+
+    // the body's turn at a point in the look-around, from -1 (full left) to +1 (full right)
+    // (Mathf.SmoothStep eases in and out, so a turn never starts or stops suddenly)
+    private float LookCurve(float progress)
+    {
+        if (progress < turnRightEnd)
+        {
+            return Mathf.SmoothStep(0.0f, 1.0f, progress / turnRightEnd);
+        }
+        if (progress < holdRightEnd)
+        {
+            return 1.0f;
+        }
+        if (progress < turnLeftEnd)
+        {
+            return Mathf.SmoothStep(1.0f, -1.0f, (progress - holdRightEnd) / (turnLeftEnd - holdRightEnd));
+        }
+        if (progress < holdLeftEnd)
+        {
+            return -1.0f;
+        }
+        return Mathf.SmoothStep(-1.0f, 0.0f, (progress - holdLeftEnd) / (1.0f - holdLeftEnd));
     }
 }

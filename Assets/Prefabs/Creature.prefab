@@ -308,7 +308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e760f3b15f181f94e8a66ae66cbe057b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreatureStateLabel
-  showInGame: 1
+  showInGame: 0
   heightOffset: 1.5
   fontSize: 20
 --- !u!114 &3289659003466314622
@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreatureAnimation
   animator: {fileID: 0}
-  speedDampTime: 0.1
+  speedDampTime: 0.25
 --- !u!1001 &9090614043750943876
 PrefabInstance:
   m_ObjectHideFlags: 0

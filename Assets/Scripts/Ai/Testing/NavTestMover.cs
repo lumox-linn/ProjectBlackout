@@ -1,61 +1,51 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-// ---------------------------------------------------------------------------
-// NavTestMover  (Task B1 – test helper, TEMPORARY)
-//
-// Makes the creature's NavMeshAgent walk to a target Transform (for example the
-// PlayerStandIn capsule). It proves three things:
-//   1. The creature is standing on the baked NavMesh.
-//   2. Unity's pathfinding routes it AROUND walls and through doorways.
-//   3. Closed doors (carving NavMeshObstacles) block the path.
-//
-// The pathfinding itself (A* search over the NavMesh polygons) is done by Unity.
-// We only call SetDestination(). Reference:
-//   https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent.html
-//   https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html
-//
-// Once the state machine (B2) and Patrol state (B3) work, REMOVE this component
-// from the creature. The states will control the agent instead.
-// ---------------------------------------------------------------------------
+// test helper: makes the NavMeshAgent walk to a target, to check the creature paths around walls
+// (the pathfinding itself, an A* search over the NavMesh, is done by Unity; we only call SetDestination)
+// Unity Scripting API: https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent.html
 [RequireComponent(typeof(NavMeshAgent))]
 public class NavTestMover : MonoBehaviour
 {
-    [Tooltip("Where the creature should walk to (drag the PlayerStandIn here).")]
+    // where the creature should walk to (drag the PlayerStandIn here)
     [SerializeField] private Transform target;
+    // how often (seconds) we check whether the target moved (cheaper than every frame)
+    public float repathInterval = 0.25f;
+    // only ask for a new path if the target moved more than this many metres
+    public float repathDistance = 0.5f;
 
-    [Tooltip("How often (in seconds) we check whether the target moved. " +
-             "Checking a few times per second instead of every frame is cheaper.")]
-    [SerializeField] private float repathInterval = 0.25f;
-
-    [Tooltip("Only ask for a new path if the target moved more than this many metres.")]
-    [SerializeField] private float repathDistance = 0.5f;
-
+    // the agent that does the pathfinding and moving
     private NavMeshAgent agent;
+    // where the target was when we last asked for a path
     private Vector3 lastTargetPosition;
-    private float repathTimer;
-    private bool pathStatusLogged;
-    private bool arrivedLogged;
+    // counts down to the next check
+    private float repathTimer = 0.0f;
+    // makes sure each message is only logged once per path
+    private bool pathStatusLogged = false;
+    private bool arrivedLogged = false;
 
-    private void Awake()
+    void Awake()
     {
-        // Cache the component once instead of calling GetComponent every frame.
+        // get the agent once instead of every frame
         agent = GetComponent<NavMeshAgent>();
     }
 
-    private void Start()
+    void Start()
     {
+        // no target set
         if (target == null)
         {
-            Debug.LogWarning($"[NavTestMover] No target set on {name}. Drag a Transform into the Target slot.", this);
+            Debug.LogWarning("[NavTestMover] No target set on " + name + ". Drag a Transform into the Target slot.", this);
             enabled = false;
             return;
         }
 
+        // not standing on the NavMesh
         if (!agent.isOnNavMesh)
         {
-            Debug.LogError($"[NavTestMover] {name} is not on the NavMesh. " +
-                           "Move it onto the blue NavMesh area, and check the Agent Type matches the NavMeshSurface.", this);
+            Debug.LogError("[NavTestMover] " + name + " is not on the NavMesh. Move it onto the blue NavMesh area, and check the Agent Type matches the NavMeshSurface.", this);
             enabled = false;
             return;
         }
@@ -63,14 +53,13 @@ public class NavTestMover : MonoBehaviour
         SendToTarget();
     }
 
-    private void Update()
+    void Update()
     {
-        // 1) Every repathInterval seconds, re-send the destination if the target has moved.
+        // 1) every repathInterval seconds, ask for a new path if the target has moved
         repathTimer -= Time.deltaTime;
-        if (repathTimer <= 0f)
+        if (repathTimer <= 0.0f)
         {
             repathTimer = repathInterval;
-
             float movedSqr = (target.position - lastTargetPosition).sqrMagnitude;
             if (movedSqr > repathDistance * repathDistance)
             {
@@ -78,26 +67,24 @@ public class NavTestMover : MonoBehaviour
             }
         }
 
-        // pathPending = Unity is still calculating the path. Wait until it's done.
+        // Unity is still calculating the path, so wait
         if (agent.pathPending)
         {
             return;
         }
 
-        // 2) Once the path is calculated, report whether it reaches the target.
+        // 2) once the path is calculated, report whether it reaches the target
         if (!pathStatusLogged)
         {
             pathStatusLogged = true;
 
             if (agent.pathStatus == NavMeshPathStatus.PathComplete)
             {
-                Debug.Log($"[NavTestMover] Path found: {agent.path.corners.Length} corners, " +
-                          $"{agent.remainingDistance:F1} m to go.", this);
+                Debug.Log("[NavTestMover] Path found: " + agent.path.corners.Length + " corners, " + agent.remainingDistance.ToString("0.0") + " m to go.", this);
             }
             else if (agent.pathStatus == NavMeshPathStatus.PathPartial)
             {
-                Debug.LogWarning("[NavTestMover] Target can't be fully reached (probably behind a closed door). " +
-                                 "Walking as close as possible.", this);
+                Debug.LogWarning("[NavTestMover] Target can't be fully reached (probably behind a closed door). Walking as close as possible.", this);
             }
             else
             {
@@ -105,7 +92,7 @@ public class NavTestMover : MonoBehaviour
             }
         }
 
-        // 3) Log once when the creature arrives (within its Stopping Distance).
+        // 3) log once when the creature arrives (within its Stopping Distance)
         if (!arrivedLogged && agent.remainingDistance <= agent.stoppingDistance + 0.05f)
         {
             arrivedLogged = true;
@@ -113,19 +100,17 @@ public class NavTestMover : MonoBehaviour
         }
     }
 
+    // asks Unity to calculate a path to the target (the agent then walks it by itself)
     private void SendToTarget()
     {
         lastTargetPosition = target.position;
         pathStatusLogged = false;
         arrivedLogged = false;
-
-        // SetDestination asks Unity to calculate a path. The agent then walks it by itself.
         agent.SetDestination(target.position);
     }
 
-    // Draws the current path as a cyan line in the Scene view (Play mode only).
-    // Good for screenshots in the report and for the presentation demo.
-    private void OnDrawGizmos()
+    // draws the current path as a cyan line in the Scene view (Play mode only)
+    void OnDrawGizmos()
     {
         if (agent == null || !agent.hasPath)
         {
