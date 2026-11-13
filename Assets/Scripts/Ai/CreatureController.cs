@@ -46,9 +46,12 @@ public class CreatureController : MonoBehaviour, IStunnable
     public float attackRange = 1.8f;
     // extra distance before it stops attacking (stops it flickering between Attack and Chase)
     public float attackRangeBuffer = 0.4f;
-    // time from the start of a swing to the moment it hits (matches the attack animation)
-    public float attackWindup = 0.4f;
-    // time between the start of one swing and the next (seconds)
+    // when the claws strike in the attack animation, as a fraction of it (0 = start, 0.5 = halfway, 1 = end)
+    // the player only loses health at this moment, so it matches what you see
+    public float attackHitPoint = 0.5f;
+    // how long one attack animation lasts (set automatically from the Attack animation by CreatureAnimation)
+    public float attackDuration = 2.6f;
+    // pause after an attack animation finishes, before the next swing starts (seconds)
     public float attackCooldown = 1.2f;
     // damage per hit (the player dies after 3 hits)
     public int attackDamage = 1;

@@ -14,8 +14,8 @@ public class CreatureAnimation : MonoBehaviour
 {
     // the Animator on the model child (found automatically if left empty)
     [SerializeField] private Animator animator;
-    // smooths the Speed parameter so walk/run blend gently (seconds)
-    public float speedDampTime = 0.1f;
+    // smooths the Speed parameter so walk/run/idle blend gently (seconds)
+    public float speedDampTime = 0.25f;
 
     [Header("Look around (optional procedural head turn)")]
     // turn the head/chest in code while looking around (leave off when using the LookLeft/LookRight animations)
@@ -85,6 +85,29 @@ public class CreatureAnimation : MonoBehaviour
         creature.Fsm.StateChanged += OnStateChanged;
         creature.AttackSwing += OnAttackSwing;
         subscribed = true;
+
+        // tell the creature how long the attack animation is, so it waits for it to finish
+        SetAttackDurationFromClip();
+    }
+
+    // finds the "Attack" clip in the Animator Controller and copies its length to the creature
+    private void SetAttackDurationFromClip()
+    {
+        if (animator.runtimeAnimatorController == null)
+        {
+            return;
+        }
+
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            if (clip.name == "Attack")
+            {
+                creature.attackDuration = clip.length;
+                Debug.Log("[CreatureAnimation] Attack animation is " + clip.length.ToString("0.00") + " s long.", this);
+                return;
+            }
+        }
     }
 
     // stop listening when the creature is destroyed

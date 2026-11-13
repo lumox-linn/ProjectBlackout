@@ -144,11 +144,11 @@ public static class CreatureMixamoSetup
             toAttack.hasExitTime = false;
             toAttack.duration = 0.1f;
 
-            // Attack -> Locomotion when the animation is nearly finished
+            // Attack -> Locomotion near the end of the animation (a longer blend so it does not snap)
             AnimatorStateTransition fromAttack = attackState.AddTransition(locomotion);
             fromAttack.hasExitTime = true;
-            fromAttack.exitTime = 0.9f;
-            fromAttack.duration = 0.15f;
+            fromAttack.exitTime = 0.8f;
+            fromAttack.duration = 0.35f;
         }
 
         if (lookLeft != null && lookRight != null)

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // shows the creature's current state name above its head, in a different colour per state
-// (in the Game view with OnGUI, and in the Scene view with Handles.Label)
+// (always in the Scene view; in the Game view only if showInGame is ticked, e.g. for the presentation demo,
+// because in the real game it would show the player where the creature is)
 [RequireComponent(typeof(CreatureController))]
 public class CreatureStateLabel : MonoBehaviour
 {
-    // untick to hide the label in the Game view (e.g. for the final build)
-    public bool showInGame = true;
+    // tick to also show the label in the Game view (off for the real game)
+    public bool showInGame = false;
     // metres above the creature's middle (1.5 = just above the head)
     public float heightOffset = 1.5f;
     // size of the label text
