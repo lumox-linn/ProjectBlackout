@@ -1,0 +1,515 @@
+Unused: 501 files, 300.7 MB (protected folders not counted)
+    150.3 MB  Third Party/SciFi Warehouse Kit
+    119.1 MB  Third Party/ScifiOfficeLite
+     22.2 MB  Third Party/Modular SciFi MegaKit[Standard]
+      4.7 MB  Audio/Third Party
+      2.2 MB  Art/Creature
+      1.0 MB  Audio/Alarm
+      1.0 MB  Audio/Voice
+      0.2 MB  Audio
+      0.0 MB  TutorialInfo/Icons
+      0.0 MB  Materials
+      0.0 MB  TutorialInfo
+      0.0 MB  Materials/Greybox
+
+Assets/Art/Creature/Textures/parasiteZombie_specular.png
+Assets/Audio/Alarm/Alarm_Klaxon_Low.wav
+Assets/Audio/Alarm/Alarm_Wail_Low.wav
+Assets/Audio/Third Party/WarehouseKit/background_rumble.wav
+Assets/Audio/Third Party/WarehouseKit/Fan_St.wav
+Assets/Audio/Third Party/WarehouseKit/pressure_release_01.wav
+Assets/Audio/Third Party/WarehouseKit/pressure_release_02.wav
+Assets/Audio/Voice/Blackout_PA_Warning.wav
+Assets/Audio/Zombie_Attack_Bite_001.wav
+Assets/Materials/Greybox/M_Blood.mat
+Assets/Materials/M_CeilingTiles.mat
+Assets/Materials/M_Creature2.mat
+Assets/Materials/M_Door.mat
+Assets/Materials/M_ServerLED.mat
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Aliens/Alien_Scolitex.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_Astra.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_Hollow.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_Large_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_MetalSupport.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_MetalSupport_Curve.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_Pipes.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_Round.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_Simple.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_0.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_1.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_3.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_4.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_5.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_6.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_7.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_8.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_9.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_A.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Dashes.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_K.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_90.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_90_Round.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_90_Round_Large.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_Bend1_L.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_Bend1_R.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_Bend2_L.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_Bend2_R.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Line_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Logo.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Logo_Letters.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Logo_Small.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_V.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_X.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_XSign.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Decals/Decal_Z.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Door_Frame_A.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Door_Frame_Square_Blocked.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Door_Frame_SquareTall.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Door_Simple.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_3Plates.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_CenterPlate.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_CenterPlate_Curve.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_DarkPlates.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_DarkPlates_Curves.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Metal.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Metal_Curve.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Metal2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Metal2_Curve.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Rails_2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Rails_4.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Rails_4Wide.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Rails_4WideTall.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Ramp_2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Ramp_2Short.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Ramp_4.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Ramp_4Wide.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Simple.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Simple_Curve.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Simple2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Simple2_Curve.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Squares.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Squares_Curve.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Stairs_2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Stairs_4.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Stairs_4Wide.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Stairs_4WideTall.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Window_Thin.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Window_Wide.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_X.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_AccessPoint.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Chest.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Clamp.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Crate4.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Fan_Small.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_ItemHolder.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Light_Corner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Light_Floor.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Light_Small.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Light_Wide.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_PipeHolder.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_3.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_4.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_Incline_Long_L.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_Incline_Long_R.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_Incline_Short_L.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_Incline_Short_R.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_Round_Big.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Rail_Round_Small.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Vent_Small.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Props/Prop_Vent_Wide.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomMetal_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomMetal_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomMetal_Corner_Square_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomMetal_Corner_Square_Outer_1.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomMetal_Corner_Square_Outer_2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomMetal_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomSimple_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomSimple_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomSimple_Corner_Square_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomSimple_Corner_Square_Outer_1.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomSimple_Corner_Square_Outer_2.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomSimple_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_AccentStrip_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_AccentStrip_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_AccentStrip_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Band2_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Band2_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Band2_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_DarkMetal2_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_DarkMetal2_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_DarkMetal2_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_DarkPlastic_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_DarkPlastic_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_DarkPlastic_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Metal2_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Metal2_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Metal2_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_MetalPlates_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_MetalPlates_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_MetalPlates_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Simple1_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Simple1_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Simple1_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Simple2_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Simple2_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Simple2_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Triangles_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Triangles_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_Triangles_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_WhitePlate2_Corner_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_WhitePlate2_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/ShortWall_WhitePlate2_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopAstra_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopAstra_Curve_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopAstra_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopCables_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopCables_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopCables_Corner_Square_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopCables_Corner_Square_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopCables_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopCables_Straight_Hanging.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopPlastic_Corner_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopPlastic_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopPlastic_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopPlastic_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopSimple_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopSimple_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopSimple_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopWindow_Corner_Curve_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopWindow_Corner_Curve_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopWindow_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Corner_Square_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Corner_Square_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Straight_Broken.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Straight_Divided.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Straight_Flat.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Straight_Flat_Window.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Straight_Window.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallBand_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallBand_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallBand_Corner_Square_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallBand_Corner_Square_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallBand_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallBand_Straight_Broken.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallWindow_Cap_A.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallWindow_Cap_B.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallWindow_Corner_Round_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallWindow_Corner_Round_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallWindow_Corner_Square_Inner.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallWindow_Corner_Square_Outer.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallWindow_Straight.fbx
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_PaddedWall_ORM.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_PaddingWall_Emissive.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_01_DetailMask.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_01_Emissive.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_01_ORM.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_02_BaseColor_Blue.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_02_DetailMask.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_02_ORM.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_03_BaseColor.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_03_Normal.png
+Assets/Third Party/Modular SciFi MegaKit[Standard]/Modular SciFi MegaKit[Standard]/Textures/T_Trim_03_ORM.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/barrel_s.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Bay Door Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Catwalk Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Ceiling Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Ducts Pillars Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Fan Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Floor Tile Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Light Colored Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Shelf Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Shelf Trans Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Stairs Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Stairs Trans Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Structure Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Structure Trans Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Vent Trans Mat.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Walls Alpha.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Walls.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Materials/Windows.mat
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Props/Ducts/Duct Elbow 01.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Props/Ducts/Duct Elbow 02.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Props/Ducts/Duct Straight.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Props/Ducts/Duct Tee.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Props/Ducts/Duct Vent.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Props/Misc Props/Hanging Light.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Props/Shelves/Shelves.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Corner.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Long Rails.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Long.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Pillar 01.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Pillar 02.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Pillar 03.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Pillar Rails.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Rails Long.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Rails Short.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Catwalk Short.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/CatWalk Stairs Wide.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/CatWalk Stairs.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Short Stairs Wide.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Catwalk/Short Stairs.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Ceiling/Ceiling Closed.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Ceiling/Ceiling Skylight.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor 4-Way Lights.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor 4-Way.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Corner Lights.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Corner.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Deadend Window.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Deadend.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Doors Lights.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Doors.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Funnel.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Incline Full.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Incline Half.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Passthrough Lights.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Passthrough Windows.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Passthrough.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Tee Lights.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Tee.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Wide Corner Windows.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Wide Corner.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Wide Windows.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Corridors/Corridor Wide.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Floor/Floor Tile 01.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Floor/Floor Tile 02.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Floor/Floor Tile 03.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Floor/Floor Tile 04.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Pillars and Beams/Ceiling Beam.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Pillars and Beams/Pillar.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Pillars and Beams/Wall Support.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Pipes 04.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Pipes 05.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Pipes 06.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Sprinkler 01.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Sprinkler 02.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Sprinkler 03.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Sprinkler 04.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Sprinkler 05.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Structure Props/Sprinkler 06.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall BayDoor.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall Corner.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall Corridor Entrance.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall Door Raised.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall Door.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall DoorClosed.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall Fan.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall Plain.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Meshes/Structures/Walls/Wall Window.fbx
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/barrel_s.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/bay_door_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/bay_door_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/ceiling_tiles_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/ceiling_tiles_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/ceiling_window_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/ceiling_window_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/ducts_pillars_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/ducts_pillars_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/fan_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/fan_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/shelf_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/shelf_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/stairs_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/stairs_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/structure_misc_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/structure_misc_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/walkway_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/walkway_n.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/walls_a.png
+Assets/Third Party/SciFi Warehouse Kit/Art/Textures/walls_n.png
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Crate Short.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 02.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 03.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 04.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 05.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 06.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 07.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 08.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet Variations/Pallet Variation 09.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Crates Barrels Pallets/Pallet.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Ducts/Duct Elbow 01.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Ducts/Duct Elbow 02.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Ducts/Duct Straight.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Ducts/Duct Tee.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Ducts/Duct Vent.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Misc Props/Hanging Light.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Misc Props/Wall Light.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Shelves/Shelf Variation 01.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Shelves/Shelf Variation 02.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Shelves/Shelf Variation 03.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Shelves/Shelf Variation 04.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Shelves/Shelf Variation 05.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Shelves/Shelf Variation 06.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Props/Shelves/Shelves Empty.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Corner.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Long Rails.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Long.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Pillar 01.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Pillar 02.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Pillar 03.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Pillar Rails.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Rails Long.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Rails Short.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Short.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/CatWalk Stairs Wide.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Catwalk Stairs.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Short Stairs Wide.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Catwalk/Short Stairs.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Ceiling/Ceiling Closed.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Ceiling/Ceiling Skylight.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor 4-Way Lights.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor 4-Way.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Corner Lights.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Corner.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Deadend Window.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Deadend.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Doors Lights.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Doors.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Funnel.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Incline Full.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Incline Half.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Passthrough Lights.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Passthrough Windows.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Passthrough.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Tee Lights.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Tee.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Wide Corner Windows.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Wide Corner.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Wide Windows.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Corridors/Corridor Wide.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Floor/Floor Tile 01.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Floor/Floor Tile 02.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Floor/Floor Tile 03.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Floor/Floor Tile 04.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Pillars and Beams/Ceiling Support.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Pillars and Beams/Pillar.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Pillars and Beams/Wall Support.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Exit Sign.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Pipes 04.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Pipes 05.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Pipes 06.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Sprinkler 01.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Sprinkler 02.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Sprinkler 03.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Sprinkler 04.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Sprinkler 05.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Structure Props/Sprinkler 06.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall BayDoor.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall Corner.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall Corridor.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall Door 02.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall Door.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall DoorClosed.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall Fan.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall Plain.prefab
+Assets/Third Party/SciFi Warehouse Kit/Prefabs/Structures/Walls/Wall Window.prefab
+Assets/Third Party/ScifiOfficeLite/Meshes/Lights/Ceiling Lights Lo.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/DemoSkybox.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Ground Mats/Carpet/Carpet 2.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Ground Mats/Carpet/Door Mat.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Ground Mats/Concrete/Concrete Ground 20m.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Ground Mats/Epoxy/Epoxy Ground 20m.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Lights/White Light.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Table Texture Set/Table Texture Set 1 V2.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Table Texture Set/Table Texture Set 5.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Table Texture Set/tray.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Table Texture Set/Vase.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Walls/Wall Set 1 T1.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Walls/Wall Set 2 Glass.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Materials/Walls/Wall Set 2.mat
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 10.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 11.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 12.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 13.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 5.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 8.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 9.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Chairs/Stool.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Radio.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Tables/Table Set 1.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Tray.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Office Interior/Vase.fbx
+Assets/Third Party/ScifiOfficeLite/Meshes/Sci-Fi Environment/Mechanical Claw.fbx
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Height.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Maskmap.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Normal.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Height.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Maskmap.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Normal.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Concrete Floor/Concrete Floor Polished AO.tif
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Concrete Floor/Concrete Floor Polished Diffuse.tif
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Concrete Floor/Concrete Floor Polished Height.tif
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Concrete Floor/Concrete Floor Polished Normal.tif
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Epoxy Paints/Epoxy Paint Diffuse.tif
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Epoxy Paints/Epoxy Paint Height.tif
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Epoxy Paints/Epoxy Paint Normal.tif
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Emissive.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Metallic.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Normal.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/tray AO.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/tray_1001_AlbedoTransparency.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/tray_1001_MetallicSmoothness.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/tray_1001_Normal.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Set Glass/Table Glass_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 1/Table texture set 1 V2_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 5/Table texture set 5_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 5/Table texture set 5_Height.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 5/Table texture set 5_Maskmap.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 5/Table texture set 5_Normal.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Vase/vase AO.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Vase/vase_grey_AlbedoTransparency.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Vase/vase_grey_MetallicSmoothness.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Vase/vase_grey_Normal.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Height.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Maskmap.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2/Wall_Multiset_2_Diffuse.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2/Wall_Multiset_2_Diffuse+Alpha.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2/Wall_Multiset_2_Height.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2/Wall_Multiset_2_Maskmap.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2/Wall_Multiset_2_Normal.png
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall 2 Half.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall 2.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall 4.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall Pillar 1.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall Pillar 3.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall Top Piece 1.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall Top Piece 3.FBX
+Assets/Third Party/ScifiOfficeLite/Meshes/Walls/Wall With Windows Set 10.FBX
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/20m Epoxy Ground.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 10.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 11.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 12.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 13.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 5.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 8.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 9.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Chairs and Stools/Stool.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Drawers/Drawer 2 Oak Variant.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Drawers/Vase.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Lighting/Ceiling Lights/2D/Ceiling Light Bright.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Lighting/Ceiling Lights/2D/Ceiling Light.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Tables/Blue Plastic/Drawer Table Long Blue Plastic Variant.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Tables/Table Set 1 Dark Oak.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Tables/Table Set 1 Grey Wood Variant.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Tech Accessories/Mechanical arm 1 Variant.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Tray.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Door Wall Opaque.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall 2 Half Variant.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall 2 Half.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall 2 Variant.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall 2.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall Pillar 3.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall Pillar.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall Top Piece Half.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall Top Piece.prefab
+Assets/Third Party/ScifiOfficeLite/Prefabs/Wall/Wall Window Set 10.prefab
+Assets/TutorialInfo/Icons/URP.png
+Assets/TutorialInfo/Layout.wlt
