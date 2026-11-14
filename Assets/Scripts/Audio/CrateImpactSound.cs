@@ -9,6 +9,7 @@ public class CrateImpactSound : MonoBehaviour
     [SerializeField] private AudioClip[] clips;              // drag 2-3 impact sounds here
     [SerializeField] private float minSpeed = 1.5f;          // softer bumps stay silent
     [SerializeField] private float loudSpeed = 10f;          // full volume at this speed
+    [SerializeField] private float minVolume = 0.5f;   // loudness of the softest hit that still makes a sound
     [SerializeField] private float cooldown = 0.15f;         // stops machine-gun clangs
     [SerializeField] private Vector2 pitchRange = new Vector2(0.9f, 1.1f);
 
