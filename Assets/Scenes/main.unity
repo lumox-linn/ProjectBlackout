@@ -273,6 +273,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 722070363}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate
@@ -561,6 +569,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 337600049}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate (1)
@@ -618,6 +634,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 337600049}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: HeavyCrate
@@ -1497,6 +1521,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 722070363}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate (1)
@@ -1784,6 +1816,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 722070363}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate (3)
@@ -2176,6 +2216,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 337600049}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate
@@ -2589,6 +2637,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 337600049}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate (2)
@@ -3071,6 +3127,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 337600049}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: TutorialCrate
@@ -3289,6 +3353,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 722070363}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate (2)
@@ -3367,6 +3439,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 722070363}
     m_Modifications:
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830071278596915394, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4118886560591222732, guid: 5a6ac2989079d654e9e20d7d102fccbb, type: 2}
     - target: {fileID: 4868610796210457359, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
       propertyPath: m_Name
       value: MetalCrate (4)
@@ -4104,8 +4184,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 679332846}
   - {fileID: 1281964273}
+  - {fileID: 679332846}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2051456150
