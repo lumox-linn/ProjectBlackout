@@ -24,6 +24,10 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private float humVolume = 0.35f;
     [SerializeField] private float gloveVolume = 0.4f;   // grab / throw / drop loudness
 
+    [Header("Getting Hit")]
+    [SerializeField] private AudioClip[] hurtClips;     // e.g. Impact_Flesh_001-003 from the zombie pack
+    private int lastHealth = -1;
+
     private CharacterController controller;
     private BlackoutMagnetGlove glove;
     private float distanceSinceStep;
@@ -36,8 +40,17 @@ public class PlayerAudio : MonoBehaviour
         glove = GetComponentInChildren<BlackoutMagnetGlove>(true);
     }
 
-    private void OnEnable() { if (glove != null) glove.Thrown += OnThrown; }
-    private void OnDisable() { if (glove != null) glove.Thrown -= OnThrown; }
+    private void OnEnable()
+    {
+        if (glove != null) glove.Thrown += OnThrown;
+        GameEvents.HealthChanged += OnHealthChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (glove != null) glove.Thrown -= OnThrown;
+        GameEvents.HealthChanged -= OnHealthChanged;
+    }
 
     private void Update()
     {
@@ -109,5 +122,12 @@ public class PlayerAudio : MonoBehaviour
         if (clip == null) return;
         sfxSource.pitch = 1f;
         sfxSource.PlayOneShot(clip, volume);
+    }
+
+    private void OnHealthChanged(int current, int max)
+    {
+        if (lastHealth >= 0 && current < lastHealth && hurtClips.Length > 0)
+            Play(hurtClips[Random.Range(0, hurtClips.Length)], 1f);   // took damage
+        lastHealth = current;
     }
 }
