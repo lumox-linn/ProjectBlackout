@@ -278,7 +278,7 @@ MonoBehaviour:
   patrolSpeed: 2
   patrolWaitTime: 1.5
   stuckTimeout: 3
-  chaseSpeed: 4.5
+  chaseSpeed: 5.5
   chaseRepathInterval: 0.2
   loseSightTime: 1.5
   investigateSpeed: 3
@@ -293,9 +293,9 @@ MonoBehaviour:
   stunImmunityTime: 3
   debugStunSeconds: 3
   minTimeInState: 0.5
-  logStateChanges: 1
-  logStateDetails: 1
-  debugKeys: 1
+  logStateChanges: 0
+  logStateDetails: 0
+  debugKeys: 0
 --- !u!114 &6835708288027798148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,8 +333,8 @@ MonoBehaviour:
   playerTag: Player
   hearingMultiplier: 1
   noiseMemoryTime: 0.5
-  logSightChanges: 1
-  logNoises: 1
+  logSightChanges: 0
+  logNoises: 0
 --- !u!114 &3898315485201919459
 MonoBehaviour:
   m_ObjectHideFlags: 0

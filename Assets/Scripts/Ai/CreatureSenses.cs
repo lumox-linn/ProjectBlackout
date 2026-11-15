@@ -34,10 +34,10 @@ public class CreatureSenses : MonoBehaviour
     public float noiseMemoryTime = 0.5f;
 
     [Header("Debug")]
-    // write to the Console when the creature starts or stops seeing the player
-    public bool logSightChanges = true;
-    // write to the Console when the creature hears (or is too far from) a noise
-    public bool logNoises = true;
+    // write to the Console when the creature starts or stops seeing the player (off for the real game)
+    public bool logSightChanges = false;
+    // write to the Console when the creature hears (or is too far from) a noise (off for the real game)
+    public bool logNoises = false;
 
     // the sight results
     private bool canSeePlayer = false;
