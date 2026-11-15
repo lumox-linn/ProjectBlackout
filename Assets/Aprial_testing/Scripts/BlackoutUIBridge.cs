@@ -18,16 +18,20 @@ namespace ProjectBlackout.PlayerTest
 
         private static bool autoPlayAfterReload;
 
-        private GameManager gameManager;
-        private GameUIManager teamUIManager;
+        // Drag these in the Inspector (or use Tools > Project Blackout > Setup Scene References).
+        [Header("Team managers")]
+        [SerializeField] private GameManager gameManager;
+        [SerializeField] private GameUIManager teamUIManager;
 
-        private GameObject mainMenuPanel;
-        private GameObject hudPanel;
-        private GameObject pausePanel;
-        private GameObject settingsPanel;
-        private GameObject winPanel;
-        private GameObject losePanel;
-        private GameObject howToPlayPanel;
+        [Header("UI panels")]
+        [SerializeField] private GameObject mainMenuPanel;
+        [SerializeField] private GameObject hudPanel;
+        [SerializeField] private GameObject pausePanel;
+        [SerializeField] private GameObject settingsPanel;
+        [SerializeField] private GameObject winPanel;
+        [SerializeField] private GameObject losePanel;
+        [Tooltip("Optional")]
+        [SerializeField] private GameObject howToPlayPanel;
         private bool showingInstructions;
 
         private bool settingsOpen;
@@ -36,37 +40,12 @@ namespace ProjectBlackout.PlayerTest
         private bool pendingEnableGameManager;
         private bool wasTeamUIManagerEnabled;
 
+        // Reset when Play is pressed (static values survive between plays in the Editor).
         [RuntimeInitializeOnLoadMethod(
             RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void RegisterSceneLoad()
+        private static void ResetStatics()
         {
             autoPlayAfterReload = false;
-
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        private static void OnSceneLoaded(
-            Scene scene,
-            LoadSceneMode mode)
-        {
-            InstallInAprialScene();
-        }
-
-        [RuntimeInitializeOnLoadMethod(
-            RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static void InstallInAprialScene()
-        {
-            if (FindFirstObjectByType<BlackoutFPSInput>() == null ||
-                FindFirstObjectByType<GameManager>() == null ||
-                FindFirstObjectByType<GameUIManager>() == null ||
-                FindFirstObjectByType<BlackoutUIBridge>() != null)
-            {
-                return;
-            }
-
-            new GameObject("Aprial_UIBridge_Runtime")
-                .AddComponent<BlackoutUIBridge>();
         }
 
         private void Awake()
@@ -78,9 +57,6 @@ namespace ProjectBlackout.PlayerTest
             }
 
             Instance = this;
-
-            gameManager = FindFirstObjectByType<GameManager>();
-            teamUIManager = FindFirstObjectByType<GameUIManager>();
         }
 
         private void OnEnable()
@@ -93,7 +69,7 @@ namespace ProjectBlackout.PlayerTest
             if (gameManager == null || teamUIManager == null)
             {
                 Debug.LogError(
-                    "BlackoutUIBridge: GameManager or GameUIManager not found.",
+                    "BlackoutUIBridge: GameManager or GameUIManager not assigned in the Inspector.",
                     this
                 );
 
@@ -105,18 +81,6 @@ namespace ProjectBlackout.PlayerTest
             wasTeamUIManagerEnabled = teamUIManager.enabled;
             teamUIManager.enabled = false;
 
-            Transform root = teamUIManager.transform.parent != null
-                ? teamUIManager.transform.parent
-                : teamUIManager.transform;
-
-            mainMenuPanel = FindPanel(root, "MainMenuPanel");
-            hudPanel = FindPanel(root, "HUDPanel");
-            pausePanel = FindPanel(root, "PausePanel");
-            settingsPanel = FindPanel(root, "SettingsPanel");
-            winPanel = FindPanel(root, "WinPanel");
-            losePanel = FindPanel(root, "LosePanel");
-            howToPlayPanel = FindPanel(root, "HowToPlayPanel");
-
             if (mainMenuPanel == null ||
                 hudPanel == null ||
                 pausePanel == null ||
@@ -125,7 +89,7 @@ namespace ProjectBlackout.PlayerTest
                 losePanel == null)
             {
                 Debug.LogError(
-                    "BlackoutUIBridge: One or more UI panels are missing.",
+                    "BlackoutUIBridge: One or more UI panels are not assigned in the Inspector.",
                     this
                 );
 
@@ -157,22 +121,6 @@ namespace ProjectBlackout.PlayerTest
             {
                 BeginPlaying();
             }
-        }
-
-        private static GameObject FindPanel(
-            Transform root,
-            string panelName)
-        {
-            foreach (Transform child in
-                     root.GetComponentsInChildren<Transform>(true))
-            {
-                if (child.name == panelName)
-                {
-                    return child.gameObject;
-                }
-            }
-
-            return null;
         }
 
         private void WirePanelButtons(GameObject panel)

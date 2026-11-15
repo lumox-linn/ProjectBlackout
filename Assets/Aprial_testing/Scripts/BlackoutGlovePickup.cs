@@ -1,114 +1,42 @@
-
 using UnityEngine;
-
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 namespace ProjectBlackout.PlayerTest
 {
+    /// <summary>
+    /// The magnet glove pickup. Implements IInteractable, so Linn's PlayerInteractor
+    /// shows the "[E] Claim magnet glove" prompt in Eliza's HUD and calls Interact() on E.
+    /// (No own E-key check here, otherwise E would fire twice.)
+    /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class BlackoutGlovePickup : MonoBehaviour
+    public class BlackoutGlovePickup : MonoBehaviour, IInteractable
     {
         [Header("References")]
+        [Tooltip("Drag the player's BlackoutMagnetGlove here.")]
         [SerializeField] private BlackoutMagnetGlove glove;
-        [SerializeField] private Camera playerCamera;
 
-        [Header("Interaction")]
-        [Min(0.5f)]
-        public float interactRange = 4f;
-
-        private bool canInteract;
+        // IInteractable
+        public string Prompt => "Claim magnet glove";
+        public bool CanInteract => glove != null && !glove.HasGlove;
 
         private void Awake()
         {
             if (glove == null)
             {
-                glove = FindFirstObjectByType<
-                    BlackoutMagnetGlove>();
-            }
-
-            if (playerCamera == null)
-            {
-                playerCamera = Camera.main;
+                Debug.LogWarning(
+                    "BlackoutGlovePickup: Glove is not assigned in the Inspector.",
+                    this
+                );
             }
         }
 
-        private void Update()
+        public void Interact()
         {
-            canInteract = false;
-
-            if (GameEvents.CurrentState != GameState.Playing)
+            if (!CanInteract)
                 return;
 
-            if (glove == null || playerCamera == null)
-                return;
-
-            if (glove.HasGlove)
-                return;
-
-            Ray ray = playerCamera.ViewportPointToRay(
-                new Vector3(0.5f, 0.5f, 0f)
-            );
-
-            if (!Physics.Raycast(
-                ray,
-                out RaycastHit hit,
-                interactRange,
-                ~0,
-                QueryTriggerInteraction.Ignore))
-                return;
-
-            // Only respond when aiming at this pickup.
-            if (hit.collider.gameObject != gameObject &&
-                !hit.collider.transform.IsChildOf(transform))
-                return;
-
-            canInteract = true;
-
-            if (InteractPressed())
-            {
-                ClaimGlove();
-            }
-        }
-
-        private void ClaimGlove()
-        {
             glove.UnlockGlove();
-
-            Debug.Log(
-                "Player collected the Magnet Glove!"
-            );
-
+            Debug.Log("Player collected the Magnet Glove!");
             gameObject.SetActive(false);
-        }
-
-        private void OnGUI()
-        {
-            if (!canInteract)
-                return;
-
-            GUI.Box(
-                new Rect(
-                    Screen.width / 2f - 150f,
-                    Screen.height / 2f + 50f,
-                    300f,
-                    40f
-                ),
-                "[E] CLAIM MAGNET GLOVE"
-            );
-        }
-
-        private static bool InteractPressed()
-        {
-#if ENABLE_INPUT_SYSTEM
-            return Keyboard.current != null &&
-                Keyboard.current.eKey.wasPressedThisFrame;
-#elif ENABLE_LEGACY_INPUT_MANAGER
-            return Input.GetKeyDown(KeyCode.E);
-#else
-            return false;
-#endif
         }
     }
 }

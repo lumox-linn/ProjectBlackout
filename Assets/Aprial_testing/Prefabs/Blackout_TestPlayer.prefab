@@ -568,7 +568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutPlayerHealth
   maxHealth: 3
-  debugDamageWithH: 1
+  debugDamageWithH: 0
   invulnerableAfterHit: 1
 --- !u!114 &-3745003975803729397
 MonoBehaviour:
@@ -685,6 +685,9 @@ MonoBehaviour:
   aimPosition: {x: 0.14, y: -0.19, z: 0.58}
   aimRotation: {x: -8, y: -10, z: 0}
   poseSpeed: 10
+  raiseWhenHolding: 0
+  hideLookDownAngle: 35
+  hideDrop: 0.45
   bobAmount: 0.012
   bobFrequency: 10
   swayAmount: 0.0025
@@ -938,9 +941,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutGloveHandMount
   gloveModel: {fileID: 919132149155446097, guid: 3d2d2b951d7f0f6448a231e2fe5940cb, type: 3}
   gloveSize: 0.24
+  sizeMultiplier: 1.5
   positionOffset: {x: 0, y: 0.05, z: 0}
   rotationOffset: {x: 0, y: 0, z: 0}
   mirrorModel: 0
+  useModelPose: 1
+  modelPosition: {x: -0.0128, y: -0.0674, z: -0.006}
+  modelRotation: {x: -72.04, y: 6.981, z: -7.65}
   hideFingers: 1
   onlyWhenUnlocked: 1
 --- !u!1001 &8164932697932913111
