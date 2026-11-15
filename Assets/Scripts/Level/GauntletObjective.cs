@@ -5,9 +5,9 @@ using ProjectBlackout.PlayerTest;
 public class GauntletObjective : MonoBehaviour
 {
     [SerializeField] private string objectiveId = "gauntlet";
-    private BlackoutMagnetGlove glove;
+    [SerializeField] private BlackoutMagnetGlove glove;   // drag the player's glove here
 
-    private void Start() { glove = FindFirstObjectByType<BlackoutMagnetGlove>(); }
+
 
     private void Update()
     {

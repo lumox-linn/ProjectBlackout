@@ -928,6 +928,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GauntletObjective
   objectiveId: gauntlet
+  glove: {fileID: 708940414}
 --- !u!114 &604653217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2509,6 +2510,7 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 4294967295
+  glove: {fileID: 708940414}
 --- !u!114 &922779791
 MonoBehaviour:
   m_ObjectHideFlags: 0

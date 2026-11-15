@@ -14,11 +14,9 @@ public class AimHighlighter : MonoBehaviour
     [SerializeField] private float useReach = 3f;
     [SerializeField] private LayerMask mask = ~0;
 
-    private BlackoutMagnetGlove glove;
+    [SerializeField] private BlackoutMagnetGlove glove;   // drag the player's glove here
     private GameObject current;
     private readonly Dictionary<Renderer, Material[]> original = new Dictionary<Renderer, Material[]>();
-
-    private void Start() { glove = FindFirstObjectByType<BlackoutMagnetGlove>(); }
 
     private void Update()
     {
