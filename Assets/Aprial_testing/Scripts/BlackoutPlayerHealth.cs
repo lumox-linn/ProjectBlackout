@@ -11,8 +11,8 @@ namespace ProjectBlackout.PlayerTest
     {
         [Min(1)] public int maxHealth = 3;
 
-        [Tooltip("Only for testing without a creature in PlayerTest scene")]
-        public bool debugDamageWithH = true;
+        [Tooltip("TESTING ONLY: H = take 1 damage, R = reset health. Keep OFF for the final build.")]
+        public bool debugDamageWithH = false;
 
         [Header("Hit Feedback")]
         [Tooltip("Seconds after a hit where the player can't be hurt again (gives time to run).")]
@@ -80,18 +80,6 @@ namespace ProjectBlackout.PlayerTest
 
             HealthChanged?.Invoke(CurrentHealth, maxHealth);
             GameEvents.RaiseHealthChanged(CurrentHealth, maxHealth);
-        }
-
-        private void OnGUI()
-        {
-            if (!debugDamageWithH)
-                return;
-
-            GUI.Box(
-                new Rect(Screen.width - 178f, 12f, 166f, 60f),
-                "HEALTH: " + CurrentHealth + " / " + maxHealth +
-                "\nH = damage, R = reset"
-            );
         }
 
         private static bool HPressed()

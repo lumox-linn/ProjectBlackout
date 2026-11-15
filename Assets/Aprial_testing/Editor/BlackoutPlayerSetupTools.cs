@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Animations;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using ProjectBlackout.PlayerTest;
 
@@ -307,6 +308,152 @@ public static class BlackoutPlayerSetupTools
                 "Done! BlackoutGloveHandMount added to " + body.name + ".\n\n" +
                 "Press Play, look down at your left hand, and tweak Position/Rotation Offset on that component " +
                 "(copy the values after you stop Play, because Play-mode changes are not saved).", "OK");
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
+    // ------------------------------------------------------------------ Scene references (no Find at runtime)
+
+    /// <summary>
+    /// Editor-only helper: fills the Inspector references once so the runtime scripts
+    /// never need Find / FindObjectOfType. Open the main scene first, then save it afterwards.
+    /// </summary>
+    [MenuItem("Tools/Project Blackout/Setup Scene References")]
+    public static void SetupSceneReferences()
+    {
+        GameManager gm = Object.FindFirstObjectByType<GameManager>(FindObjectsInactive.Include);
+        GameUIManager ui = Object.FindFirstObjectByType<GameUIManager>(FindObjectsInactive.Include);
+        BlackoutMagnetGlove glove = Object.FindFirstObjectByType<BlackoutMagnetGlove>(FindObjectsInactive.Include);
+
+        if (gm == null || ui == null)
+        {
+            EditorUtility.DisplayDialog("Setup Scene References",
+                "Open the main scene first (GameManager / GameUIManager not found).", "OK");
+            return;
+        }
+
+        string report = "";
+
+        // UI Bridge as a normal scene object
+        BlackoutUIBridge bridge = Object.FindFirstObjectByType<BlackoutUIBridge>(FindObjectsInactive.Include);
+        if (bridge == null)
+        {
+            GameObject go = new GameObject("UIBridge");
+            Undo.RegisterCreatedObjectUndo(go, "Add UI Bridge");
+            bridge = go.AddComponent<BlackoutUIBridge>();
+            report += "Created UIBridge object.\n";
+        }
+
+        Transform root = ui.transform.parent != null ? ui.transform.parent : ui.transform;
+        SerializedObject so = new SerializedObject(bridge);
+        so.FindProperty("gameManager").objectReferenceValue = gm;
+        so.FindProperty("teamUIManager").objectReferenceValue = ui;
+        string[,] panels =
+        {
+            { "mainMenuPanel", "MainMenuPanel" }, { "hudPanel", "HUDPanel" },
+            { "pausePanel", "PausePanel" }, { "settingsPanel", "SettingsPanel" },
+            { "winPanel", "WinPanel" }, { "losePanel", "LosePanel" },
+            { "howToPlayPanel", "HowToPlayPanel" },
+        };
+        for (int i = 0; i < panels.GetLength(0); i++)
+        {
+            Transform t = root.GetComponentsInChildren<Transform>(true).FirstOrDefault(x => x.name == panels[i, 1]);
+            so.FindProperty(panels[i, 0]).objectReferenceValue = t != null ? t.gameObject : null;
+            report += (t != null ? "OK  " : "MISSING  ") + panels[i, 1] + "\n";
+        }
+        so.ApplyModifiedProperties();
+
+        // Glove pickups -> player's glove
+        int pickups = 0;
+        foreach (BlackoutGlovePickup p in Object.FindObjectsByType<BlackoutGlovePickup>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            SerializedObject pso = new SerializedObject(p);
+            pso.FindProperty("glove").objectReferenceValue = glove;
+            pso.ApplyModifiedProperties();
+            pickups++;
+        }
+        report += "Glove pickups linked: " + pickups + (glove == null ? " (player glove NOT found!)" : "") + "\n";
+
+        EditorSceneManager.MarkSceneDirty(bridge.gameObject.scene);
+        EditorDisplayDone(report);
+    }
+
+    private static void EditorDisplayDone(string report)
+    {
+        Debug.Log("[PlayerSetup] Scene references:\n" + report);
+        EditorUtility.DisplayDialog("Setup Scene References",
+            report + "\nNow SAVE the scene (Ctrl+S) and test.", "OK");
+    }
+    // ------------------------------------------------------------------ Glove pickup visual
+
+    private const string PickupPrefabPath = Root + "Prefabs/MagnetGlovePickup.prefab";
+
+    /// <summary>Replaces the pickup sphere with the floating gauntlet (the invisible collider stays for the E raycast).</summary>
+    [MenuItem("Tools/Project Blackout/Make Glove Pickup Visual")]
+    public static void MakeGlovePickupVisual()
+    {
+        GameObject gloveModel = AssetDatabase.LoadAssetAtPath<GameObject>(GloveModelPath);
+        if (gloveModel == null)
+        {
+            EditorUtility.DisplayDialog("Make Glove Pickup Visual", "Glove model not found:\n" + GloveModelPath, "OK");
+            return;
+        }
+
+        GameObject root = PrefabUtility.LoadPrefabContents(PickupPrefabPath);
+        try
+        {
+            // Hide the sphere, keep its collider.
+            MeshRenderer sphere = root.GetComponent<MeshRenderer>();
+            if (sphere != null) sphere.enabled = false;
+
+            Transform old = root.transform.Find("GloveVisual");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+
+            GameObject visual = new GameObject("GloveVisual");
+            visual.transform.SetParent(root.transform, false);
+
+            GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(gloveModel, visual.transform);
+            model.transform.localPosition = Vector3.zero;
+            model.transform.localRotation = Quaternion.Euler(0f, 0f, 90f); // stand it up; tweak if needed
+            model.transform.localScale = Vector3.one;
+
+            // Fit to the sphere size (about 1 unit inside the prefab) and centre it.
+            Renderer[] renderers = model.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length > 0)
+            {
+                Bounds b = renderers[0].bounds;
+                foreach (Renderer r in renderers) b.Encapsulate(r.bounds);
+                float size = Mathf.Max(b.size.x, b.size.y, b.size.z);
+                float scale = size > 0.0001f ? 0.9f / size : 1f;
+                Vector3 centreLocal = visual.transform.InverseTransformPoint(b.center);
+                model.transform.localScale = Vector3.one * scale;
+                model.transform.localPosition -= centreLocal * scale;
+            }
+            foreach (Collider c in model.GetComponentsInChildren<Collider>(true))
+                Object.DestroyImmediate(c);
+
+            // Small cyan light so it stands out in the dark room.
+            GameObject lightGo = new GameObject("GlowLight");
+            lightGo.transform.SetParent(root.transform, false);
+            Light light = lightGo.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.color = new Color(0.2f, 0.9f, 1f);
+            light.range = 3f;
+            light.intensity = 1.5f;
+            light.shadows = LightShadows.None;
+
+            BlackoutPickupFloat floater = visual.AddComponent<BlackoutPickupFloat>();
+            SerializedObject so = new SerializedObject(floater);
+            so.FindProperty("glowLight").objectReferenceValue = light;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            PrefabUtility.SaveAsPrefabAsset(root, PickupPrefabPath);
+            EditorUtility.DisplayDialog("Make Glove Pickup Visual",
+                "Done! The pickup is now a floating, glowing gauntlet.\n\n" +
+                "To change its angle, open MagnetGlovePickup and rotate the model under GloveVisual.\n" +
+                "Spin/float/glow settings are on the BlackoutPickupFloat component (GloveVisual).", "OK");
         }
         finally
         {
