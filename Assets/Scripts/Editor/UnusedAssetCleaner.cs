@@ -15,9 +15,12 @@ public static class UnusedAssetCleaner
 
     // Never moved: teammates' folders (until they say OK) and Unity/package folders.
     private static readonly string[] Protected =
-    {
+{
         "Assets/Aprial_testing",
-        "Assets/UI Assets",
+        "Assets/UI Assets/Audio",
+        "Assets/UI Assets/Fonts",
+        "Assets/UI Assets/Images",
+        "Assets/UI Assets/WenrexaAssetsUI_SciFI",
         "Assets/Settings",
         "Assets/TextMesh Pro",
         UnusedFolder,
