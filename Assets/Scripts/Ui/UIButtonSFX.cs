@@ -1,25 +1,27 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+
 public class UIButtonSFX : MonoBehaviour
 {
     [Header("Button Audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip clickSound;
 
+    [Header("Buttons")]
+    [SerializeField] private Button[] buttons;
+
     private IEnumerator Start()
     {
-        // wait so UIBridge has finished rewiring the buttons
+        // Wait so UIBridge has finished rewiring the buttons.
         yield return null;
         yield return null;
-
-        Button[] buttons = FindObjectsByType<Button>(
-            FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         foreach (Button button in buttons)
         {
-            button.onClick.RemoveListener(PlayClickSound);   // no double clicks
+            if (button == null) continue;
+
+            button.onClick.RemoveListener(PlayClickSound);
             button.onClick.AddListener(PlayClickSound);
         }
     }

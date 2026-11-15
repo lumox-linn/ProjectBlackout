@@ -48,11 +48,6 @@ public class GameUIManager : MonoBehaviour
                 ResumeGame();
         }
 
-        if (Keyboard.current.f9Key.wasPressedThisFrame)
-            GameManager.Instance.WinGame();
-
-        if (Keyboard.current.f10Key.wasPressedThisFrame)
-            GameManager.Instance.LoseGame();
     }
 
     private void ShowGameState(GameState state)
@@ -91,25 +86,8 @@ public class GameUIManager : MonoBehaviour
 
     public void PlayGame()
     {
-        Debug.Log(
-            $"[UI Start] Object={name}, " +
-            $"Enabled={enabled}, Active={gameObject.activeInHierarchy}, " +
-            $"InstructionsAssigned={howToPlayPanel != null}"
-        );
-
         GameManager.Instance.StartGame();
-
-        Debug.Log(
-            $"[UI Start] UI state={currentState}, " +
-            $"Manager state={GameManager.Instance.CurrentState}"
-        );
-
         OpenHowToPlay();
-
-        Debug.Log(
-            $"[UI Start] Instructions={showingInstructions}, " +
-            $"PanelVisible={howToPlayPanel != null && howToPlayPanel.activeInHierarchy}"
-        );
     }
 
     public void OpenHowToPlay()
