@@ -10,7 +10,8 @@ using UnityEditor.Animations;
 // (if only one of LookLeft/LookRight is there, the other side is made as a mirrored copy)
 // 1. character: Rig = Humanoid, create its Avatar, extract its textures
 // 2. animations: Rig = Humanoid, copy the character's Avatar, set Loop Time, bake root motion into the pose
-// 3. controller: Locomotion blend tree (Speed: 0 Idle, 2 Walk, 4.5 Run), Stunned, Attack, LookLeft, LookRight
+// 3. controller: Locomotion blend tree (Speed: 0 Idle, 2 Walk, 5.5 Run), Stunned, LookLeft, LookRight,
+//    plus an "Attack" layer that only moves the upper body, so the creature can swing while it runs
 // (run it again any time; the controller is rebuilt in the same file so the prefab keeps its reference)
 // Unity Scripting API: https://docs.unity3d.com/ScriptReference/ModelImporter.html
 // Unity Scripting API: https://docs.unity3d.com/ScriptReference/Animations.AnimatorController.html
@@ -21,9 +22,11 @@ public static class CreatureMixamoSetup
     private const string modelPath = folder + "/Creature_Model.fbx";
     private const string controllerPath = folder + "/CreatureAnimator.controller";
 
-    // blend tree thresholds = the creature's speeds (patrol 2, chase 4.5)
+    // blend tree thresholds = the creature's speeds (patrol 2, chase 5.5)
     private const float walkSpeed = 2.0f;
-    private const float runSpeed = 4.5f;
+    private const float runSpeed = 5.5f;
+    // plays the run animation a little faster so its steps keep up with the chase speed
+    private const float runAnimSpeed = 1.2f;
 
     [MenuItem("Tools/Creature/Set Up Mixamo Creature")]
     public static void SetUp()
@@ -109,10 +112,14 @@ public static class CreatureMixamoSetup
         if (run != null)
         {
             tree.AddChild(run, runSpeed);
+
+            // speed up the run animation (the last child in the tree)
+            ChildMotion[] children = tree.children;
+            children[children.Length - 1].timeScale = runAnimSpeed;
+            tree.children = children;
         }
         stateMachine.defaultState = locomotion;
 
-        // Stunned is added first, so it wins over Attack if both happen at once
         if (stunned != null)
         {
             AnimatorState stunnedState = stateMachine.AddState("Stunned");
@@ -132,25 +139,6 @@ public static class CreatureMixamoSetup
             fromStunned.duration = 0.25f;
         }
 
-        if (attack != null)
-        {
-            AnimatorState attackState = stateMachine.AddState("Attack");
-            attackState.motion = attack;
-
-            // Any State -> Attack on the Attack trigger (each swing restarts the animation)
-            AnimatorStateTransition toAttack = stateMachine.AddAnyStateTransition(attackState);
-            toAttack.AddCondition(AnimatorConditionMode.If, 0.0f, "Attack");
-            toAttack.canTransitionToSelf = true;
-            toAttack.hasExitTime = false;
-            toAttack.duration = 0.1f;
-
-            // Attack -> Locomotion near the end of the animation (a longer blend so it does not snap)
-            AnimatorStateTransition fromAttack = attackState.AddTransition(locomotion);
-            fromAttack.hasExitTime = true;
-            fromAttack.exitTime = 0.8f;
-            fromAttack.duration = 0.35f;
-        }
-
         if (lookLeft != null && lookRight != null)
         {
             AnimatorState leftState = stateMachine.AddState("LookLeft");
@@ -165,6 +153,12 @@ public static class CreatureMixamoSetup
             AddLookTransition(leftState, rightState, 1);
             AddLookTransition(rightState, locomotion, 0);
             AddLookTransition(leftState, locomotion, 0);
+        }
+
+        // the attack goes on its own upper-body layer (added after the base layer is finished)
+        if (attack != null)
+        {
+            AddAttackLayer(controller, attack);
         }
 
         // save and select the controller
@@ -234,6 +228,61 @@ public static class CreatureMixamoSetup
         }
     }
 
+    // adds the "Attack" layer: the attack animation on the upper body only,
+    // so the legs keep walking/running from the base layer while the creature swings
+    // (the layer starts at weight 0; CreatureAnimation fades it in for each swing and out after it)
+    // Unity Manual: https://docs.unity3d.com/Manual/AnimationLayers.html
+    private static void AddAttackLayer(AnimatorController controller, AnimationClip attack)
+    {
+        // upper body only: the root, legs and feet come from the base layer
+        AvatarMask mask = new AvatarMask();
+        mask.name = "UpperBody";
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root, false);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Body, true);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Head, true);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftLeg, false);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightLeg, false);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftArm, true);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightArm, true);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFingers, true);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFingers, true);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFootIK, false);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFootIK, false);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftHandIK, true);
+        mask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightHandIK, true);
+        // saved inside the controller file
+        AssetDatabase.AddObjectToAsset(mask, controller);
+
+        // the new layer: override the upper body with the mask, starting at weight 0
+        controller.AddLayer("Attack");
+        AnimatorControllerLayer[] layers = controller.layers;
+        int index = layers.Length - 1;
+        layers[index].avatarMask = mask;
+        layers[index].blendingMode = AnimatorLayerBlendingMode.Override;
+        layers[index].defaultWeight = 0.0f;
+        controller.layers = layers;
+
+        // Empty (does nothing) is the default, Attack plays on the trigger
+        AnimatorStateMachine stateMachine = layers[index].stateMachine;
+        AnimatorState empty = stateMachine.AddState("Empty");
+        stateMachine.defaultState = empty;
+        AnimatorState attackState = stateMachine.AddState("Attack");
+        attackState.motion = attack;
+
+        // Any State -> Attack on the Attack trigger (each swing restarts the animation)
+        AnimatorStateTransition toAttack = stateMachine.AddAnyStateTransition(attackState);
+        toAttack.AddCondition(AnimatorConditionMode.If, 0.0f, "Attack");
+        toAttack.canTransitionToSelf = true;
+        toAttack.hasExitTime = false;
+        toAttack.duration = 0.1f;
+
+        // Attack -> Empty near the end of the animation (a longer blend so it does not snap)
+        AnimatorStateTransition fromAttack = attackState.AddTransition(empty);
+        fromAttack.hasExitTime = true;
+        fromAttack.exitTime = 0.8f;
+        fromAttack.duration = 0.35f;
+    }
+
     // adds a transition that happens when LookDirection equals the given value
     private static void AddLookTransition(AnimatorState from, AnimatorState to, int value)
     {
@@ -247,7 +296,7 @@ public static class CreatureMixamoSetup
     // empties the controller but keeps the same file (and GUID), so references to it still work
     private static void ClearController(AnimatorController controller)
     {
-        // remove the old blend trees saved inside the controller file
+        // remove the old blend trees and masks saved inside the controller file
         Object[] assets = AssetDatabase.LoadAllAssetsAtPath(controllerPath);
         foreach (Object asset in assets)
         {
@@ -256,6 +305,14 @@ public static class CreatureMixamoSetup
             {
                 AssetDatabase.RemoveObjectFromAsset(oldTree);
                 Object.DestroyImmediate(oldTree, true);
+            }
+
+            // and the old upper-body mask
+            AvatarMask oldMask = asset as AvatarMask;
+            if (oldMask != null)
+            {
+                AssetDatabase.RemoveObjectFromAsset(oldMask);
+                Object.DestroyImmediate(oldMask, true);
             }
         }
 

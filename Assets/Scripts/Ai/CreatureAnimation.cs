@@ -4,8 +4,8 @@ using UnityEngine;
 
 // connects the AI to the Animator on the creature's model
 // (the states never touch the Animator; this script watches the AI and sets the Animator parameters)
-// Speed (float): how fast the agent moves -> Locomotion blend tree (0 Idle, 2 Walk, 4.5 Run)
-// Attack (trigger): an attack swing started
+// Speed (float): how fast the agent moves -> Locomotion blend tree (0 Idle, 2 Walk, 5.5 Run)
+// Attack (trigger): an attack swing started (plays on the upper-body "Attack" layer, so the legs keep moving)
 // Stunned (bool): the creature is in the Stunned state
 // LookDirection (int): 1 = LookRight, -1 = LookLeft, 0 = not looking around
 // character and animations: Mixamo (Adobe), https://www.mixamo.com
@@ -16,6 +16,8 @@ public class CreatureAnimation : MonoBehaviour
     [SerializeField] private Animator animator;
     // smooths the Speed parameter so walk/run/idle blend gently (seconds)
     public float speedDampTime = 0.25f;
+    // how fast the upper-body attack layer fades in and out (per second, 6 = about 0.17 s)
+    public float attackLayerBlendSpeed = 6.0f;
 
     [Header("Look around (optional procedural head turn)")]
     // turn the head/chest in code while looking around (leave off when using the LookLeft/LookRight animations)
@@ -38,6 +40,10 @@ public class CreatureAnimation : MonoBehaviour
     private CreatureController creature;
     // whether we are listening to the creature's events
     private bool subscribed = false;
+    // the index of the "Attack" layer in the Animator (-1 if the controller does not have one)
+    private int attackLayer = -1;
+    // counts down while the attack animation is playing (the attack layer is faded in)
+    private float attackLayerTimer = 0.0f;
 
     // the bones turned by the procedural head turn
     private Transform chestBone;
@@ -68,6 +74,9 @@ public class CreatureAnimation : MonoBehaviour
 
         // the NavMeshAgent moves the creature, not the animation
         animator.applyRootMotion = false;
+
+        // the upper-body attack layer (made by Tools > Creature > Set Up Mixamo Creature)
+        attackLayer = animator.GetLayerIndex("Attack");
 
         // humanoid rigs let us ask for bones by body part, whatever they are called
         if (animator.isHuman)
@@ -127,6 +136,27 @@ public class CreatureAnimation : MonoBehaviour
 
         // look right / look left while investigating
         animator.SetInteger(lookDirectionHash, creature.Investigate.LookSide);
+
+        UpdateAttackLayer();
+    }
+
+    // fades the upper-body attack layer in while a swing plays and out after it
+    private void UpdateAttackLayer()
+    {
+        if (attackLayer < 0)
+        {
+            return;
+        }
+
+        attackLayerTimer -= Time.deltaTime;
+        float targetWeight = 0.0f;
+        if (attackLayerTimer > 0.0f)
+        {
+            targetWeight = 1.0f;
+        }
+
+        float weight = Mathf.MoveTowards(animator.GetLayerWeight(attackLayer), targetWeight, attackLayerBlendSpeed * Time.deltaTime);
+        animator.SetLayerWeight(attackLayer, weight);
     }
 
     // runs after the Animator has posed the skeleton this frame
@@ -170,11 +200,20 @@ public class CreatureAnimation : MonoBehaviour
     private void OnStateChanged(IState oldState, IState newState)
     {
         animator.SetBool(stunnedHash, newState == creature.Stunned);
+
+        // a stun cuts the swing off
+        if (newState == creature.Stunned)
+        {
+            attackLayerTimer = 0.0f;
+        }
     }
 
     // called by CreatureController when an attack swing starts
     private void OnAttackSwing()
     {
         animator.SetTrigger(attackHash);
+
+        // keep the attack layer faded in for most of the animation, then fade it out as the swing ends
+        attackLayerTimer = creature.attackDuration * 0.9f;
     }
 }

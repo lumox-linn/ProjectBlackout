@@ -13,10 +13,10 @@ using UnityEngine.Serialization;
 public class CreatureController : MonoBehaviour, IStunnable
 {
     [Header("Patrol")]
-    // the patrol route in order (PatrolPoint_1..10)
-    // (right-click this component > "Fill Patrol Points From Level", or leave it empty and they are found at the start)
+    // the patrol route in order (PatrolPoint_1..10), filled in the Inspector
+    // (right-click this component > "Fill Patrol Points From Level" to fill it in one click)
     public List<Transform> patrolPoints = new List<Transform>();
-    // name of the GameObject whose children are the patrol points
+    // name of the GameObject whose children are the patrol points (only used by the fill menu in the Editor)
     public string patrolPointsParentName = "PatrolPoints";
     // walking speed while patrolling (m/s)
     public float patrolSpeed = 2.0f;
@@ -27,7 +27,7 @@ public class CreatureController : MonoBehaviour, IStunnable
 
     [Header("Chase")]
     // running speed while chasing the player (m/s)
-    public float chaseSpeed = 4.5f;
+    public float chaseSpeed = 5.5f;
     // how often the chase target is updated (seconds), not every frame so it is cheaper
     public float chaseRepathInterval = 0.2f;
     // after losing sight, keep going to the last seen position for this long before investigating (seconds)
@@ -51,7 +51,8 @@ public class CreatureController : MonoBehaviour, IStunnable
     public float attackHitPoint = 0.5f;
     // how long one attack animation lasts (set automatically from the Attack animation by CreatureAnimation)
     public float attackDuration = 2.6f;
-    // pause after an attack animation finishes, before the next swing starts (seconds)
+    // pause after a swing that hit, once its animation finishes, before the next swing (seconds)
+    // (a swing that missed has no pause)
     public float attackCooldown = 1.2f;
     // damage per hit (the player dies after 3 hits)
     public int attackDamage = 1;
@@ -69,13 +70,13 @@ public class CreatureController : MonoBehaviour, IStunnable
     public float minTimeInState = 0.5f;
 
     [Header("Debug")]
-    // write every state change to the Console
-    public bool logStateChanges = true;
-    // write extra Console lines for Patrol and Investigate
+    // write every state change to the Console (off for the real game)
+    public bool logStateChanges = false;
+    // write extra Console lines for Patrol and Investigate (off for the real game)
     [FormerlySerializedAs("logPatrolPoints")]
-    public bool logStateDetails = true;
-    // press 1-5 in Play mode to force a state (testing only)
-    public bool debugKeys = true;
+    public bool logStateDetails = false;
+    // press 1-5 in Play mode to force a state (testing only, off for the real game)
+    public bool debugKeys = false;
 
     // the components and the state machine the states use
     private NavMeshAgent agent;
@@ -178,10 +179,10 @@ public class CreatureController : MonoBehaviour, IStunnable
             }
         }
 
-        // find the patrol points automatically if none were assigned
+        // the patrol points must be filled in the Inspector
         if (patrolPoints.Count == 0)
         {
-            FindPatrolPointsInScene();
+            Debug.LogWarning("[Creature] No patrol points assigned, so the creature will stand still in Patrol. Right-click Creature Controller > Fill Patrol Points From Level.", this);
         }
 
         // the agent must stop before it is out of attack range, or it can never attack
@@ -280,36 +281,30 @@ public class CreatureController : MonoBehaviour, IStunnable
         return offset.magnitude;
     }
 
-    // adds the children of the "PatrolPoints" object to the list, in Hierarchy order
-    // (runs once, so GameObject.Find is fine here)
-    private void FindPatrolPointsInScene()
+#if UNITY_EDITOR
+    // right-click this component > "Fill Patrol Points From Level" to fill the list in the Editor
+    // (adds the children of the "PatrolPoints" object in Hierarchy order; only runs in the Editor, never in the game)
+    [ContextMenu("Fill Patrol Points From Level")]
+    private void FillPatrolPointsFromLevel()
     {
         GameObject parent = GameObject.Find(patrolPointsParentName);
         if (parent == null)
         {
-            Debug.LogWarning("[Creature] No patrol points assigned and no GameObject called '" + patrolPointsParentName + "' found. The creature will stand still in Patrol.", this);
+            Debug.LogWarning("[Creature] No GameObject called '" + patrolPointsParentName + "' found in the open scene.", this);
             return;
         }
 
+        // lets the change be undone and saved with the scene
+        UnityEditor.Undo.RecordObject(this, "Fill Patrol Points");
+        patrolPoints.Clear();
         foreach (Transform child in parent.transform)
         {
             patrolPoints.Add(child);
         }
 
-        Debug.Log("[Creature] Found " + patrolPoints.Count + " patrol points under '" + patrolPointsParentName + "'.", this);
+        Debug.Log("[Creature] Filled " + patrolPoints.Count + " patrol points from '" + patrolPointsParentName + "'.", this);
     }
-
-    // right-click this component > "Fill Patrol Points From Level" to see the route before pressing Play
-    [ContextMenu("Fill Patrol Points From Level")]
-    private void FillPatrolPointsFromLevel()
-    {
-#if UNITY_EDITOR
-        // lets the change be undone and saved
-        UnityEditor.Undo.RecordObject(this, "Fill Patrol Points");
 #endif
-        patrolPoints.Clear();
-        FindPatrolPointsInScene();
-    }
 
     // 1 Patrol, 2 Investigate, 3 Chase, 4 Attack, 5 Stun (number row or number pad, new Input System)
     private void HandleDebugKeys()
