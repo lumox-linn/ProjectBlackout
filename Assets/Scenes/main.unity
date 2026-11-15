@@ -712,6 +712,59 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77719f6f5e052754693dfabf5a8f3fbf, type: 3}
+--- !u!1 &516006870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 516006872}
+  - component: {fileID: 516006871}
+  m_Layer: 0
+  m_Name: UIBridge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &516006871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516006870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1034d952f396589429e249060dfc2a94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutUIBridge
+  gameManager: {fileID: 2051456160}
+  teamUIManager: {fileID: 2051456159}
+  mainMenuPanel: {fileID: 2051456158}
+  hudPanel: {fileID: 2051456157}
+  pausePanel: {fileID: 2051456156}
+  settingsPanel: {fileID: 2051456155}
+  winPanel: {fileID: 2051456154}
+  losePanel: {fileID: 2051456153}
+  howToPlayPanel: {fileID: 2051456152}
+--- !u!4 &516006872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516006870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &523274887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1268,6 +1321,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5006275091407228299, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
   m_PrefabInstance: {fileID: 708940412}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &708940414 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5350198956494868396, guid: d5f34fa8e799943498944a732a5c205c, type: 3}
+  m_PrefabInstance: {fileID: 708940412}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230b55cf9c71c864e97b5e11b8ae8ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectBlackout.PlayerTest.BlackoutMagnetGlove
 --- !u!1 &710986259
 GameObject:
   m_ObjectHideFlags: 0
@@ -2031,7 +2095,7 @@ PrefabInstance:
     - target: {fileID: 5595529160993628942, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
       propertyPath: glove
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 708940414}
     - target: {fileID: 5595529160993628942, guid: 902921edcedab35488be1f408f7d63c2, type: 3}
       propertyPath: playerCamera
       value: 
@@ -4774,6 +4838,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 766610765838465565, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
   m_PrefabInstance: {fileID: 2051456150}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2051456152 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1837121905732291632, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2051456153 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6886724354387693141, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2051456154 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6710097827466250858, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2051456155 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7281215563645026545, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2051456156 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2254551950028744315, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2051456157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1494027003571545413, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2051456158 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1791998525169705120, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2051456159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9129409085997936169, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c946cd0b9ad5f4740a2231f96c52c429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameUIManager
+--- !u!114 &2051456160 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6872961658531617333, guid: 0048c5e7a33c423499564f2310d3ef4d, type: 3}
+  m_PrefabInstance: {fileID: 2051456150}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7053cd8d7bdc8654fbaa47e65f921e90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
 --- !u!1 &2051469389
 GameObject:
   m_ObjectHideFlags: 0
@@ -5546,3 +5667,4 @@ SceneRoots:
   - {fileID: 1032505112}
   - {fileID: 2043528308}
   - {fileID: 1123316718}
+  - {fileID: 516006872}

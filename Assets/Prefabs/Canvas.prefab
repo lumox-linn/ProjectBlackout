@@ -3073,6 +3073,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthUI
   healthText: {fileID: 2213305957980395187}
+  playerHealth: {fileID: 0}
+  hearts: []
 --- !u!114 &7144429128738802219
 MonoBehaviour:
   m_ObjectHideFlags: 0
